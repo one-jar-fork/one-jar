@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?fileVersion 2.1.0?>
+
+<ManagedProjectBuildInfo>
+<project id="one-jar-dll.cdt.managedbuild.target.gnu.cygwin.so.954129798" name="Shared Library (Gnu on Windows)" projectType="cdt.managedbuild.target.gnu.cygwin.so">
+<configuration id="cdt.managedbuild.config.gnu.cygwin.so.debug.180640274" name="Debug" parent="cdt.managedbuild.config.gnu.cygwin.so.debug" artifactName="one-jar-dll" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" artifactExtension="dll" cleanCommand="rm -rf">
+<toolChain superClass="cdt.managedbuild.toolchain.gnu.cygwin.so.debug" id="cdt.managedbuild.toolchain.gnu.cygwin.so.debug.1977980543" name="GCC Tool Chain">
+<tool superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.so.debug" id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.so.debug.607716272" name="GCC C Compiler"/>
+<tool superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.so.debug" id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.so.debug.771386186" name="GCC C++ Compiler" command="g++">
+<option superClass="gnu.cpp.compiler.option.other.other" id="gnu.cpp.compiler.option.other.other.163452908" value="-c -fmessage-length=0" valueType="string"/>
+<option superClass="gnu.cpp.compiler.option.include.paths" id="gnu.cpp.compiler.option.include.paths.903016109" valueType="includePath">
+<listOptionValue value="&quot;C:\j2sdk1.4.2_04\include&quot;" builtIn="false"/>
+<listOptionValue value="&quot;C:\j2sdk1.4.2_04\include\win32&quot;" builtIn="false"/>
+</option>
+</tool>
+<tool superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.so.debug" id="cdt.managedbuild.tool.gnu.c.linker.cygwin.so.debug.1199381505" name="GCC C Linker"/>
+<tool superClass="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.so.debug" id="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.so.debug.403714759" name="GCC C++ Linker" command="g++">
+<option superClass="gnu.cpp.link.option.flags" id="gnu.cpp.link.option.flags.1966150147" value="-Wl,--kill-at" valueType="string"/>
+<option superClass="gnu.cpp.link.option.other" id="gnu.cpp.link.option.other.1732044878"/>
+<option superClass="gnu.cpp.link.option.paths" id="gnu.cpp.link.option.paths.2127789099" valueType="stringList"/>
+<option superClass="gnu.cpp.link.option.libs" id="gnu.cpp.link.option.libs.1477013388" valueType="libs"/>
+</tool>
+<tool superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.so.debug" id="cdt.managedbuild.tool.gnu.assembler.cygwin.so.debug.1561467403" name="GCC Assembler"/>
+</toolChain>
+</configuration>
+<configuration id="cdt.managedbuild.config.gnu.cygwin.so.release.206424056" name="Release" parent="cdt.managedbuild.config.gnu.cygwin.so.release" artifactName="one-jar-dll" errorParsers="org.eclipse.cdt.core.MakeErrorParser;org.eclipse.cdt.core.GCCErrorParser;org.eclipse.cdt.core.GLDErrorParser;org.eclipse.cdt.core.GASErrorParser" artifactExtension="dll" cleanCommand="rm -rf">
+<toolChain superClass="cdt.managedbuild.toolchain.gnu.cygwin.so.release" id="cdt.managedbuild.toolchain.gnu.cygwin.so.release.1641255515" name="GCC Tool Chain">
+<tool superClass="cdt.managedbuild.tool.gnu.c.compiler.cygwin.so.release" id="cdt.managedbuild.tool.gnu.c.compiler.cygwin.so.release.401361236" name="GCC C Compiler"/>
+<tool superClass="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.so.release" id="cdt.managedbuild.tool.gnu.cpp.compiler.cygwin.so.release.924918266" name="GCC C++ Compiler"/>
+<tool superClass="cdt.managedbuild.tool.gnu.c.linker.cygwin.so.release" id="cdt.managedbuild.tool.gnu.c.linker.cygwin.so.release.1730585134" name="GCC C Linker"/>
+<tool superClass="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.so.release" id="cdt.managedbuild.tool.gnu.cpp.linker.cygwin.so.release.1191338999" name="GCC C++ Linker"/>
+<tool superClass="cdt.managedbuild.tool.gnu.assembler.cygwin.so.release" id="cdt.managedbuild.tool.gnu.assembler.cygwin.so.release.1905854244" name="GCC Assembler"/>
+</toolChain>
+</configuration>
+</project>
+</ManagedProjectBuildInfo>
