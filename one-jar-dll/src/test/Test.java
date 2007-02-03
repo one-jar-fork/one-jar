@@ -5,16 +5,19 @@
 
 package test;
 
+import com.simontuffs.onejar.example.main.Testable;
+
 /**
  * @author simon
  * Test class for JNI access to a C++ class in a DLL.
  */
-public class Test {
+public class Test extends Testable {
     
     static {
         try {
+            String path = System.getProperty("one-jar.dll.path", "");
             System.out.println("Test: loading native code");
-            System.loadLibrary("one-jar-dll");
+            System.loadLibrary(path + "one-jar-dll");
             System.out.println("Test: native code loaded");
         } catch (Throwable t) {
             t.printStackTrace();
@@ -24,11 +27,25 @@ public class Test {
     native String hello();
     native String echo(String message);
    
+    public void testHello() {
+        System.out.println("Test: " + hello());
+    }
+    
+    public void testEcho() {
+        String sent = "Test: hello from Java!";
+        String expected = "echo(" + sent + ") (c++ strings)";
+        String echo = echo(sent);
+        if (!expected.equals(echo)) {
+            fail("Echo'd message '" + echo + "' was not as expected '" + expected + "'");
+        }
+        System.out.println("Test: " + echo(sent));
+        System.out.println("Test: Done.");
+    }
+    
     public static void main(String args[]) {
         Test test = new Test();
-        System.out.println("Test: " + test.hello());
-        System.out.println("Test: " + test.echo("Test: hello from Java!"));
-        System.out.println("Test: Done.");
+        test.testHello();
+        test.testEcho();
     }
 
 }
