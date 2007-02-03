@@ -1,11 +1,12 @@
-<project name="one-jar-dll" default="one-jar" basedir=".">
+<project name="one-jar-dll" default="dist" basedir=".">
 
 	<property name="build.dir" value="${basedir}/build" />
 	<property name="class.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="${build.dir}/jars" />
 	<property name="src.dir" value="${basedir}/src" />
 	<property name="native.dir" value="${basedir}/Debug" />
-	<property name="one-jar-boot.jar" location="${basedir}/../one-jar/dist/one-jar-boot-0.96.jar" />
+	<property name="one-jar.version" value="-0.96" />
+	<property name="one-jar-boot.jar" location="${basedir}/../one-jar/dist/one-jar-boot${one-jar.version}.jar" />
 
 	<target name="mkdirs">
 		<mkdir dir="${class.dir}" />
@@ -22,7 +23,7 @@
 		<javac destdir="${class.dir}" debug="on" deprecation="off" optimize="off">
 			<src path="${src.dir}" />
 		</javac>
-		<jar destfile="${jar.dir}/main/test.jar" manifest="${src.dir}/main-manifest.mf">
+		<jar destfile="${jar.dir}/main/main.jar" manifest="${src.dir}/main-manifest.mf">
 			<fileset dir="${class.dir}">
 				<include name="**/*.class" />
 			</fileset>
@@ -41,10 +42,10 @@
 		<unjar dest="${jar.dir}/one-jar" src="${one-jar-boot.jar}" />
 	</target>
 
-	<target name="one-jar" depends="main,binlib,one-jar-boot">
-		<jar destfile="${build.dir}/one-jar-dll.jar" manifest="${jar.dir}/one-jar/boot-manifest.mf">
+	<target name="dist" depends="main,binlib,one-jar-boot">
+		<jar destfile="${build.dir}/one-jar-dll${one-jar.version}.jar" manifest="${jar.dir}/one-jar/boot-manifest.mf">
 			<fileset dir="${jar.dir}">
-				<include name="main/test.jar" />
+				<include name="main/main.jar" />
 				<include name="binlib/one-jar-dll.dll" />
 			</fileset>
 			<fileset dir="${jar.dir}/one-jar">
@@ -55,11 +56,11 @@
 
 
 	<!-- Import the OneJar Ant taskdefs from a peer one-jar project -->
-	<import file="${basedir}/../one-jar/ant/one-jar.xml"/>
+	<import file="${basedir}/../one-jar/ant/one-jar-task.xml"/>
 	
 	<target name="one-jar-ant-macro" depends="main,binlib,one-jar-boot">
 		<!-- The one-jar Ant macro -->
-		<one-jar-macro boot.manifest="src/boot-manifest.mf" main.classes="${class.dir}" main.manifest="${src.dir}/main-manifest.mf" destfile="${build.dir}/one-jar-dll.jar">
+		<one-jar-macro boot.manifest="src/boot-manifest.mf" main.classes="${class.dir}" main.manifest="${src.dir}/main-manifest.mf" destfile="${build.dir}/one-jar-dll${one-jar.version}.jar">
 			<main>
 				<fileset dir="${class.dir}" includes="**/*.class" />
 			</main>
@@ -71,7 +72,7 @@
 	
 	<target name="one-jar-ant" depends="main,binlib,one-jar-boot">
 		<!-- The one-jar Ant taskdef, extends <jar> -->
-		<one-jar manifest="src/boot-manifest.mf" destfile="${build.dir}/one-jar-dll.jar">
+		<one-jar manifest="src/boot-manifest.mf" destfile="${build.dir}/one-jar-dll${one-jar.version}.jar">
 			<main dir="${class.dir}" manifest="${src.dir}/main-manifest.mf">
 				<fileset dir="${class.dir}" includes="**/*.class" />
 			</main>
