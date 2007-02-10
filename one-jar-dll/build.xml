@@ -8,10 +8,10 @@
 	<property name="native.dir" value="${basedir}/Debug" />
     <property name="dist.dir" value="${basedir}/dist" />
 	<property name="one-jar.version" value="0.96" />
-    <property name="one-jar.dir" value="../one-jar"/>   
-    <property name="one-jar.build.ant" value="${one-jar.dir}/build/ant"/>   
+    <property name="one-jar.dir" location="../one-jar"/>   
+    <property name="one-jar.build.ant" location="${one-jar.dir}/build/ant"/>   
 	<property name="one-jar-boot.jar" location="${basedir}/../one-jar/dist/one-jar-boot-${one-jar.version}.jar" />
-
+ 
 	<target name="mkdirs">
 		<mkdir dir="${classes.dir}" />
         <mkdir dir="${classes.dir}"/>   
@@ -26,6 +26,8 @@
 	</target>
 
     <target name="compile.tests">
+        <ant antfile="${one-jar.dir}/build.xml" target="compile.tests" inheritall="false">
+        </ant>   
         <mkdir dir="${classes.dir}/test" />
         <javac destdir="${classes.dir}/test" debug="on" deprecation="off" optimize="off">
             <src path="${test.dir}" />
@@ -82,8 +84,9 @@
 
 
 	<!-- Import the OneJar Ant taskdefs from a peer one-jar project -->
-	<import file="${basedir}/../one-jar/ant/one-jar-task.xml"/>
-    <import file="${basedir}/../one-jar/ant/one-jar-macro.xml"/>
+    <property name="one-jar.dist.dir" value="${basedir}/../one-jar/dist"/>   
+	<import file="${one-jar.dist.dir}/one-jar-ant-task.xml"/>
+    <import file="${one-jar.dist.dir}/one-jar-macro.xml"/>
 	
 	<target name="one-jar-ant-macro" depends="main,binlib,one-jar-boot">
 		<!-- The one-jar Ant macro -->
@@ -139,5 +142,8 @@
             <fileset dir="test-results" includes="*SelfTest*.xml" />
             <report format="frames" todir="test-reports" />
         </junitreport>
+        <echo>***********************************************</echo>
+        <echo>* Report is in /test-reports/index.html</echo>
+        <echo>***********************************************</echo>
     </target>
 </project>
