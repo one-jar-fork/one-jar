@@ -1,12 +1,13 @@
 <project name="one-jar-dll" default="dist" basedir=".">
 
-	<property name="build.dir" value="${basedir}/build" />
-	<property name="classes.dir" value="${build.dir}/ant" />
-	<property name="jar.dir" value="${build.dir}/jars" />
-	<property name="src.dir" value="${basedir}/src" />
-    <property name="test.dir" value="${basedir}/test" />
-	<property name="native.dir" value="${basedir}/Debug" />
-    <property name="dist.dir" value="${basedir}/dist" />
+	<property name="build.dir" location="${basedir}/build" />
+	<property name="classes.dir" location="${build.dir}/ant" />
+	<property name="jar.dir" location="${build.dir}/jars" />
+	<property name="src.dir" location="${basedir}/src" />
+    <property name="cpp.dir" location="${base.dir}/cpp"/>   
+    <property name="test.dir" location="${basedir}/test" />
+	<property name="native.dir" location="${basedir}/Debug" />
+    <property name="dist.dir" location="${basedir}/dist" />
 	<property name="one-jar.version" value="0.96" />
     <property name="one-jar.dir" location="../one-jar"/>   
     <property name="one-jar.build.ant" location="${one-jar.dir}/build/ant"/>   
@@ -23,6 +24,7 @@
 
 	<target name="clean">
 		<delete dir="${classes.dir}" />
+        <delete dir="${jar.dir}" />
 	</target>
 
     <target name="compile.tests">
@@ -79,6 +81,10 @@
 			<fileset dir="${jar.dir}/one-jar">
 				<include name="**/*.class" />
 			</fileset>
+            <fileset dir="${basedir}">
+                <include name="cpp/**"/>
+                <include name="Debug/**"/>
+            </fileset>   
 		</jar>
 	</target>
 
@@ -97,6 +103,10 @@
 			<binlib>
 				<fileset dir="${jar.dir}/binlib" includes="one-jar-dll.dll" />
 			</binlib>
+            <fileset dir="${basedir}">
+                <include name="cpp/**"/>
+                <include name="Debug/**"/>
+            </fileset>   
 		</one-jar-macro>
 	</target>
 	
@@ -105,10 +115,15 @@
 		<one-jar manifest="src/boot-manifest.mf" destfile="${build.dir}/one-jar-dll-task-${one-jar.version}.jar">
 			<main manifest="${src.dir}/main-manifest.mf">
 				<fileset dir="${classes.dir}" includes="**/*.class" />
+                <fileset dir="${src.dir}/test" includes="**"/>   
 			</main>
 			<binlib>
 				<fileset dir="${jar.dir}/binlib" includes="one-jar-dll.dll" />
 			</binlib>
+            <fileset dir="${basedir}">
+                <include name="cpp/**"/>
+                <include name="Debug/**"/>
+            </fileset>   
 		</one-jar>
 	</target>
 	
