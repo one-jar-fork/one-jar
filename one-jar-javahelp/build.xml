@@ -1,0 +1,115 @@
+<!-- 
+    Build an example One-Jar JavaHelp application.  Also, can build an SDK which 
+    is able to rebuild such an application (one-jar-javahelp-sdk) when unpacked
+    into a working directory.
+    
+    Steps:
+    
+    1. java -jar one-jar-javahelp-sdk.jar (extracts the SDK)
+    2. cd one-jar-javahelp-sdk
+    3. ant (rebuilds the jar files, including the SDK.  You must point to javahelp 2.0 using
+            the javahelp.dir Ant property, e.g. ant -Djavahelp.dir=c:/jh2.0).
+    4. java -jar dist/one-jar-javahelp.jar (runs the idedemo)
+    5. java -Done-jar.main.app=hsviewer -jar dist/one-jar-javahelp.jar(runs the hsviewer demo)    7. ant (rebuilds the JAR files, including the SDK).
+-->
+<project name="one-jar-javahelp" default="all">
+
+	<property name="javahelp.dir" location="c:/work/jh2.0" />
+    <!-- version number -->
+    <property name="one-jar.version" value="0.97" />
+	
+	<available file="${javahelp.dir}/demos/bin/idedemo.jar" property="javahelp.found"/>
+	<fail unless="javahelp.found">
+	Unable to locate idedemo.jar in ${javahelp.dir}.  Please use -Djavahelp.dir to point
+	to the location of jh2.0 on your system.
+	</fail>
+	
+    <available file="one-jar-ant-task-${one-jar.version}.jar" filepath="../one-jar/dist" property="one-jar-ant-task.path" value="../one-jar/dist"/>
+	<available file="one-jar-ant-task-${one-jar.version}.jar" filepath="." property="one-jar-ant-task.path" value="."/>
+
+	<property name="one-jar-ant-task.file" value="one-jar-ant-task-${one-jar.version}.jar"/>
+	<property name="one-jar-ant-task.jar" value="${one-jar-ant-task.path}/${one-jar-ant-task.file}"/>
+	
+	<taskdef classpath="${one-jar-ant-task.jar}" name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" />
+
+	<target name="init">
+		<mkdir dir="dist"/>
+	</target>
+	
+	<target name="clean">
+		<delete dir="dist"/>
+	</target>
+	
+	<target name="all" depends="one-jar-javahelp,one-jar-javahelp-sdk"/>
+		
+	<path id="javahelp.jars">
+        <fileset file="${javahelp.dir}/javahelp/lib/jh.jar"/>
+        <fileset file="${javahelp.dir}/demos/lib/classviewer.jar"/>
+        <fileset file="${javahelp.dir}/demos/hsjar/idehelp.jar"/>
+        <fileset file="${javahelp.dir}/demos/hsjar/apidoc.jar"/>
+        <fileset file="jars/hs-merge.jar"/>
+	</path>
+		
+	<target name="one-jar-javahelp" depends="init">
+		<mkdir dir="classes"/>
+        <mkdir dir="jars"/>
+		<javac destdir="classes" srcdir="src" includes="**/*.java" classpathref="javahelp.jars"/>
+		<jar destfile="jars/test.jar">
+			<manifest>
+			    <attribute name="Main-Class" value="TestJavaHelp"/>
+		    </manifest>
+			<fileset dir="classes" includes="**/*.class"/>
+		</jar>
+		<jar destfile="jars/hs-merge.jar">
+            <fileset dir="${javahelp.dir}/demos/hs/merge">
+                <include name="**"/>
+            </fileset>
+		</jar>
+		<one-jar destfile="dist/one-jar-javahelp.jar">
+			<manifest>
+                <attribute name="One-Jar-Default-Main-Jar" value="main/idedemo.jar"/>
+			</manifest>
+			<mainjars>
+				<fileset dir="${javahelp.dir}/demos/bin">
+					<!-- Demonstrate two main program jars -->
+	                <include name="idedemo.jar"/>
+					<include name="hsviewer.jar"/>
+				</fileset>
+				<fileset dir="jars">
+	                <include name="test.jar"/>
+				</fileset>
+			</mainjars>
+			<lib>
+				<!-- TODO: use path refid to get these jars -->
+		        <fileset file="${javahelp.dir}/javahelp/lib/jh.jar"/>
+		        <fileset file="${javahelp.dir}/demos/lib/classviewer.jar"/>
+		        <fileset file="${javahelp.dir}/demos/hsjar/idehelp.jar"/>
+		        <fileset file="${javahelp.dir}/demos/hsjar/apidoc.jar"/>
+		        <fileset file="jars/hs-merge.jar"/>
+			</lib>
+		</one-jar>
+	</target>
+	
+	<target name="one-jar-javahelp-sdk" depends="init">
+	    <!-- Rebuild the one-jar JavaHelp SDK -->  
+		<echo>one-jar-ant-task.jar=${one-jar-ant-task.jar}</echo>
+		<one-jar destfile="dist/one-jar-javahelp-sdk.jar">
+			<manifest>
+                <attribute name="Main-Class" value="com.simontuffs.onejar.Boot"/>
+                <attribute name="One-Jar-Expand" value="build.xml,${one-jar-ant-task.file}"/>
+				<attribute name="One-Jar-Expand-Dir" value="one-jar-javahelp-sdk"/>
+                <attribute name="One-Jar-Show-Expand" value="true"/>
+                <attribute name="One-Jar-Confirm-Expand" value="true"/>
+                <attribute name="One-Jar-Default-Main-Jar" value=""/>
+			</manifest>
+			<main/>
+			<fileset dir=".">
+				<include name="build.xml"/>
+			</fileset>
+			<fileset dir="${one-jar-ant-task.path}">
+				<include name="${one-jar-ant-task.file}"/>
+			</fileset>
+		</one-jar>
+	</target>
+
+</project>
