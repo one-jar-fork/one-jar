@@ -64,6 +64,8 @@
 		<available file="${native.dir}/one-jar-dll.dll" property="one-jar-dll.available" />
 		<fail unless="one-jar-dll.available" message="Missing ${native.dir}/one-jar-dll.dll" />
 		<copy file="${native.dir}/one-jar-dll.dll" todir="${jar.dir}/binlib" />
+		<mkdir dir="${jar.dir}/binlib/windows32"/>
+		<copy file="${jar.dir}/binlib/one-jar-dll.dll" todir="${jar.dir}/binlib/windows32"/>
 	</target>
 
 	<target name="one-jar-boot" depends="mkdirs">
@@ -71,7 +73,7 @@
 		<unjar dest="${jar.dir}/one-jar" src="${one-jar-boot.jar}" />
 	</target>
 
-	<target name="dist" depends="main,binlib,one-jar-boot">
+	<target name="dist" depends="main,binlib,one-jar-boot,one-jar-ant,one-jar-ant-arch">
         <mkdir dir="${dist.dir}"/>   
 		<jar destfile="${dist.dir}/one-jar-dll-${one-jar.version}.jar" manifest="${jar.dir}/one-jar/boot-manifest.mf">
 			<fileset dir="${jar.dir}">
@@ -86,6 +88,8 @@
                 <include name="Debug/**"/>
             </fileset>   
 		</jar>
+		<copy file="${build.dir}/one-jar-dll-task-${one-jar.version}.jar" todir="${dist.dir}"/>
+        <copy file="${build.dir}/one-jar-dll-task-arch-${one-jar.version}.jar" todir="${dist.dir}"/>
 	</target>
 
 
@@ -114,8 +118,7 @@
 		<!-- The one-jar Ant taskdef, extends <jar> -->
 		<one-jar manifest="src/boot-manifest.mf" destfile="${build.dir}/one-jar-dll-task-${one-jar.version}.jar">
 			<main manifest="${src.dir}/main-manifest.mf">
-				<fileset dir="${classes.dir}" includes="**/*.class" />
-                <fileset dir="${src.dir}/test" includes="**"/>   
+				<fileset dir="${classes.dir}/src" includes="**/*.class" />
 			</main>
 			<binlib>
 				<fileset dir="${jar.dir}/binlib" includes="one-jar-dll.dll" />
@@ -125,6 +128,21 @@
                 <include name="Debug/**"/>
             </fileset>   
 		</one-jar>
+	</target>
+	
+	<target name="one-jar-ant-arch" depends="main,binlib,one-jar-boot">
+        <one-jar manifest="src/boot-manifest.mf" destfile="${build.dir}/one-jar-dll-task-arch-${one-jar.version}.jar">
+            <main manifest="${src.dir}/main-manifest.mf">
+                <fileset dir="${classes.dir}/src" includes="**/*.class" />
+            </main>
+            <binlib>
+                <fileset dir="${jar.dir}/binlib" includes="windows32/one-jar-dll.dll" />
+            </binlib>
+            <fileset dir="${basedir}">
+                <include name="cpp/**"/>
+                <include name="Debug/**"/>
+            </fileset>   
+        </one-jar>
 	</target>
 	
     <property name="formatter" value="xml" />
