@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" output="build/eclipse/src" path="src"/>
 	<classpathentry kind="src" output="build/eclipse/test" path="test"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.4.2_04"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.3"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/one-jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
