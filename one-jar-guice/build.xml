@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="one-jar-guice" basedir="." default="build">
+	<property name="classes.dir" value="classes" />
+	<property name="lib.dir" value="lib" />
+	<property name="one-jar.dist.dir" value="${basedir}/../one-jar/dist" />
+	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
+	<property name="temp.dir" value="temp" />	
+
+	<path id="libraries">
+		<pathelement location="${lib.dir}/guice-2.0.jar" />
+		<pathelement location="${lib.dir}/aopalliance.jar" />
+	</path>
+
+	<target name="build" depends="clean, compile, create-eclipse-jar, create-one-jar" />
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+		<mkdir dir="${classes.dir}" />
+	</target>
+
+	<target name="compile">
+		<javac destdir="${classes.dir}" includes="**/*.java" debug="true">
+			<src path="src" />
+			<classpath refid="libraries" />
+		</javac>
+	</target>
+
+	<target name="copy-libs-to-temp">
+		<delete dir="${temp.dir}" />
+		<mkdir dir="${temp.dir}" />
+		<copy todir="${temp.dir}" flatten="true">
+			<path refid="libraries" />
+		</copy>
+	</target>
+
+	<target name="create-eclipse-jar">
+		<antcall target="copy-libs-to-temp" />
+		<jar destfile="test-eclipse-guice.jar">
+			<manifest>
+				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
+				<attribute name="Rsrc-Main-Class" value="onejar_guice.Main" />
+				<attribute name="Class-Path" value="." />
+				<attribute name="Rsrc-Class-Path" value="./ guice-2.0.jar aopalliance.jar" />
+			</manifest>
+			<zipfileset src="${eclipse.jar-in-jar.dir}/jar-in-jar-loader.zip" />
+			<fileset dir="${classes.dir}" />
+			<fileset dir="${temp.dir}" />
+		</jar>
+		<delete dir="${temp.dir}" />
+	</target>
+
+
+	<!-- One Jar is troublesome because of Guice problems: http://bit.ly/anGc7a -->
+	<import file="${one-jar.dist.dir}/one-jar-ant-task.xml" />
+	<target name="create-one-jar">
+		<antcall target="copy-libs-to-temp" />
+		<one-jar destfile="test-one-jar-guice.jar" manifest="onejar-guice.mf">
+			<main>
+				<fileset dir="${classes.dir}/" />
+			</main>
+			<lib>
+				<fileset dir="${temp.dir}" />
+			</lib>
+		</one-jar>
+		<delete dir="${temp.dir}" />
+	</target>
+
+</project>
