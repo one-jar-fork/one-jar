@@ -110,6 +110,7 @@
     <!-- Test the distribution -->
     <target name="test" depends="build">
         <antcall target="test.one-jar-guice" />
+    	<antcall target="test.eclipse-guice" />
         <antcall target="report"/>   
     </target>
    
@@ -148,7 +149,7 @@
 
     <target name="test.eclipse-guice" depends="build">
         <echo>********** test-eclipse-guice.jar</echo>
-        <junit fork="yes" showoutput="yes" printsummary="yes">
+        <junit fork="yes" showoutput="yes" printsummary="yes" dir="${basedir}">
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
             <classpath path="${classes.dir}/test"/>

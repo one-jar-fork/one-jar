@@ -1,5 +1,9 @@
 <project name="one-jar-dll" default="dist" basedir=".">
 
+    <pathconvert targetos="unix" property="basedir.unix">
+        <path location="${basedir}"/>
+    </pathconvert>
+
 	<property name="build.dir" location="${basedir}/build" />
 	<property name="classes.dir" location="${build.dir}/ant" />
 	<property name="jar.dir" location="${build.dir}/jars" />
@@ -13,13 +17,17 @@
     <property name="one-jar.build.ant" location="${one-jar.dir}/build/ant"/>   
 	<property name="one-jar-boot.jar" location="${basedir}/../one-jar/dist/one-jar-boot-${one-jar.version}.jar" />
  
+	<!-- Defaults: expected to be overriden as part of overall test suite for aggregation. -->
+	<property name="test.reports.dir" value="${basedir.unix}/test-reports"/>
+	<property name="test.results.dir" value="${basedir.unix}/test-results"/>
+	
 	<target name="mkdirs">
 		<mkdir dir="${classes.dir}" />
-        <mkdir dir="${classes.dir}"/>   
 		<mkdir dir="${jar.dir}/main" />
 		<mkdir dir="${jar.dir}/binlib" />
 		<mkdir dir="${jar.dir}/one-jar" />
-        <mkdir dir="${basedir}/test-results" />
+        <mkdir dir="${test.results.dir}" />
+		<mkdir dir="${test.reports.dir}"/>
 	</target>
 
 	<target name="clean">
@@ -36,6 +44,7 @@
             <classpath>
                 <fileset file="${one-jar.dir}/dist/one-jar-boot-${one-jar.version}.jar"/>   
                 <path location="${one-jar.build.ant}/test"/>
+                <path location="${one-jar.dir}/lib/junit-3.8.1.jar"/>
             </classpath>
         </javac>
     </target>
@@ -149,34 +158,58 @@
     
     <!-- Test the distribution -->
     <target name="test" depends="dist">
-        <antcall target="test.one-jar-dll" />
+        <antcall target="test.one-jar-task-dll" />
+        <antcall target="test.one-jar-task-arch-dll" />
         <antcall target="report"/>   
     </target>
    
-    <target name="test.one-jar-dll" depends="dist,compile.tests">
-        <echo>********** one-jar-dll-${one-jar.version}.jar</echo>
+    <target name="test.one-jar-task-dll" depends="dist,compile.tests">
+        <echo>********** one-jar-dll-task-dll-${one-jar.version}.jar</echo>
         <junit fork="yes" showoutput="no" printsummary="yes">
             <jvmarg value="-Done-jar.verbose=true" />
             <jvmarg value="-Done-jar.jarname=${basedir}/build/one-jar-dll-${one-jar.version}.jar" />
             <classpath>
-                <fileset file="${basedir}/build/one-jar-dll-${one-jar.version}.jar" />
+                <fileset file="${basedir}/build/one-jar-dll-task-${one-jar.version}.jar" />
                 <path location="${one-jar.build.ant}/test"/> 
+                <path location="${one-jar.build.ant}/example"/> 
                 <path location="${classes.dir}/test" />
+            	<path location="${one-jar.dir}/lib/junit-3.8.1.jar"/>
             </classpath>
 
-            <test name="com.simontuffs.onejar.dll.test.SelfTestDLL" outfile="test-results/one-jar-SelfTestDLL" />
+            <test name="com.simontuffs.onejar.dll.test.SelfTestDLL" todir="${test.results.dir}" outfile="one-jar-SelfTestDLL" />
+            <formatter type="${formatter}" usefile="yes" />
+        </junit>
+    </target>
+
+    <target name="test.one-jar-task-arch-dll" depends="dist,compile.tests">
+        <echo>********** one-jar-dll-task-arch-dll-${one-jar.version}.jar</echo>
+        <junit fork="yes" showoutput="no" printsummary="yes">
+            <jvmarg value="-Done-jar.verbose=true" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/one-jar-dll-${one-jar.version}.jar" />
+            <classpath>
+                <fileset file="${basedir}/build/one-jar-dll-task-arch-${one-jar.version}.jar" />
+                <path location="${one-jar.build.ant}/test"/> 
+                <path location="${one-jar.build.ant}/example"/> 
+                <path location="${classes.dir}/test" />
+                <path location="${one-jar.dir}/lib/junit-3.8.1.jar"/>
+            </classpath>
+
+            <test name="com.simontuffs.onejar.dll.test.SelfTestArchDLL" todir="${test.results.dir}" outfile="one-jar-SelfTestArchDLL" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
     </target>
 
     <target name="report">
-        <mkdir dir="test-reports" />
-        <junitreport todir="test-reports">
-            <fileset dir="test-results" includes="*SelfTest*.xml" />
-            <report format="frames" todir="test-reports" />
+        <echo>basedir.unix=${basedir.unix}</echo>
+    	<echo>test.reports=${test.reports.dir}</echo>
+            
+        <mkdir dir="${test.reports.dir}" />
+        <junitreport todir="${test.reports.dir}">
+            <fileset dir="${test.results.dir}" includes="*SelfTest*.xml" />
+            <report format="noframes" todir="${test.reports.dir}" />
         </junitreport>
         <echo>***********************************************</echo>
-        <echo>* Report is in /test-reports/index.html</echo>
+        <echo>* Report is in ${test.reports.dir}/index.html</echo>
         <echo>***********************************************</echo>
     </target>
 </project>
