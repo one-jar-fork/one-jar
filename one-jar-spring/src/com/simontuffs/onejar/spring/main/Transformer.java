@@ -1,4 +1,4 @@
-package com.simontuffs.spring.test;
+package com.simontuffs.onejar.spring.main;
 
 import org.springframework.stereotype.Component;
 

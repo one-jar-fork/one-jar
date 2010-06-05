@@ -1,15 +1,17 @@
-<project name="one-jar-spring" default="one-jar-spring">
+<project name="one-jar-spring" default="build.one-jar-spring-scan">
 
-	<property name="one-jar.dist.dir" value="../one-jar/dist"/>
-    <import file="${one-jar.dist.dir}/one-jar-ant-task.xml" optional="true" />
-
-    <target name="one-jar-spring">
-        <one-jar destfile="one-jar-spring.jar">
+	<property name="one-jar.dir" value="../one-jar"/>
+    <import file="${one-jar.dir}/build.onejar.xml"/>
+	
+    <target name="build.one-jar-spring-scan" depends="build.init">
+        <one-jar destfile="build/test-one-jar-spring-scan.jar">
         	<manifest>
-        		<attribute name="One-Jar-Main-Class" value="com.simontuffs.spring.test.Main"/>
+        		<attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.spring.main.Main"/>
         	</manifest>
         	<main>
-        		<fileset dir="bin" includes="**/*"/>
+        		<fileset dir="classes/src" includes="**/main/*"/>
+        		<fileset dir="src" includes="beans.xml"/>
+                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
         	</main>
         	<lib>
         		<fileset dir="lib" includes="*.jar"/>
@@ -17,4 +19,49 @@
     	</one-jar>
 	</target>
 	
+	<target name="build.one-jar-spring-xml" depends="build.init" description="Build the XML application context example">
+        <ant antfile="app-context/build.xml" target="build.one-jar-spring-xml" inheritall="false">
+        </ant>
+    </target>
+	
+	<target name="test.one-jar-spring-xml" description="Test the XML application context example">
+        <ant antfile="app-context/build.xml" target="test.one-jar-spring-xml" inheritall="false">
+        </ant>
+	</target>
+	
+    <property name="formatter" value="xml" />
+
+    <target name="run.one-jar-spring-scan" depends="build.one-jar-spring-scan">
+        <java fork="true" jar="build/test-one-jar-spring-scan.jar"/>
+    </target>
+
+    <!-- Test the distribution -->
+    <target name="test" depends="build.one-jar-spring-scan" description="Test the build">
+        <antcall target="test.one-jar-spring-scan" />
+        <antcall target="junit.report"/>   
+    </target>
+
+    <target name="test.one-jar-spring-scan" depends="build.one-jar-spring-scan" description="Test Spring classpath scanning">
+        <echo>********** test-one-jar-spring-scan.jar</echo>
+        <junit fork="yes" showoutput="yes" printsummary="yes">
+            <!-- Debug 
+        	<jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8888"/>
+            -->
+            <jvmarg value="-Done-jar.verbose=false" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/test-one-jar-spring-scan.jar" />
+        	<classpath>
+                <fileset file="build/test-one-jar-spring-scan.jar" />
+                <path refid="one-jar.libraries"/>
+                <path location="classes/test" />
+            </classpath>
+
+        	<!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
+
+            <test name="com.simontuffs.onejar.spring.test.SelfTestOneJarSpringScan" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarSpringScan" />
+            <formatter type="${formatter}" usefile="yes" />
+        </junit>
+    </target>
+
 </project>

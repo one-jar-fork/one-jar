@@ -1,59 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="one-jar-guice" basedir="." default="build">
-    <pathconvert targetos="unix" property="basedir.unix">
-        <path location="${basedir}"/>
-    </pathconvert>
 
-    <property name="classes.dir" value="classes" />
-	<property name="lib.dir" value="lib" />
-	<property name="one-jar.dir" value="${basedir}/../one-jar"/>
-    <property name="one-jar.version" value="0.97" />
-	<property name="one-jar.dist.dir" value="${one-jar.dir}/dist" />
-    <property name="one-jar.build.ant" location="${one-jar.dir}/build/ant"/>   
+    <!-- Hook into One-Jar project -->
+    <property name="one-jar.dir" location="../one-jar"/>
+    <import file="${one-jar.dir}/build.onejar.xml"/>
+    
 	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
 	<property name="temp.dir" value="temp" />	
-
-    <!-- Defaults: expected to be overriden as part of overall test suite for aggregation. -->
-    <property name="test.reports.dir" value="${basedir.unix}/test-reports"/>
-    <property name="test.results.dir" value="${basedir.unix}/test-results"/>
-	
-	<path id="libraries">
-		<pathelement location="${lib.dir}/guice-2.0.jar" />
-		<pathelement location="${lib.dir}/aopalliance.jar" />
-	</path>
-	
-	<path id="one-jar.libraries">
-        <pathelement location="${one-jar.dir}/lib/junit-3.8.1.jar"/>
-        <pathelement location="${one-jar.build.ant}/test"/>
-        <pathelement location="${one-jar.build.ant}/example"/>
-        <pathelement location="${one-jar.dir}/dist/one-jar-boot-${one-jar.version}.jar"/>   
-	</path>
-
+    <path id="libraries">
+        <pathelement location="lib/guice-2.0.jar" />
+        <pathelement location="lib/aopalliance.jar" />
+    </path>
+    
     <target name="mkdirs">
         <mkdir dir="${test.results.dir}" />
         <mkdir dir="${test.reports.dir}"/>
-    	<mkdir dir="${classes.dir}/src"/>
-        <mkdir dir="${classes.dir}/test"/>
+    	<mkdir dir="classes/src"/>
+        <mkdir dir="classes/test"/>
     </target>
 
-	<target name="build" depends="clean, mkdirs, compile, create-eclipse-jar, create-one-jar" />
+	<target name="build" depends="clean, mkdirs, compile, build.eclipse-jar-guice, build.one-jar-guice" />
 
 	<target name="clean">
-		<delete dir="${classes.dir}" />
-		<mkdir dir="${classes.dir}" />
+		<delete dir="classes" />
+		<mkdir dir="classes" />
 	</target>
 
 	<target name="compile" depends="mkdirs">
-        <javac destdir="${classes.dir}/test" includes="**/*.java" debug="true">
+        <javac destdir="classes/test" includes="**/*.java" debug="true">
             <src path="test" />
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
+        	<!-- Uses Invoker to set up a JUnit test bridge -->
+        	<classpath path="${one-jar.build.ant}/test"/>
         </javac>
-        <javac destdir="${classes.dir}/src" includes="**/*.java" debug="true">
+        <javac destdir="classes/src" includes="**/*.java" debug="true">
             <src path="src" />
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
-        	<classpath path="${classes.dir}/test"/>
+            <classpath path="${one-jar.build.ant}/example"/>
         </javac>
 	</target>
 
@@ -65,10 +50,10 @@
 		</copy>
 	</target>
 
-	<target name="create-eclipse-jar">
+	<target name="build.eclipse-jar-guice" depends="compile">
 		<antcall target="copy-libs-to-temp" />
 		<mkdir dir="build"/>
-		<jar destfile="build/test-eclipse-guice.jar">
+		<jar destfile="build/${test}-eclipse-guice.jar">
 			<manifest>
 				<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader" />
 				<attribute name="Rsrc-Main-Class" value="onejar_guice.Main" />
@@ -77,26 +62,21 @@
 			</manifest>
 			<zipfileset src="${eclipse.jar-in-jar.dir}/jar-in-jar-loader.zip" />
 			<fileset dir="${temp.dir}" />
-            <fileset dir="${classes.dir}/src" />
-			<!-- Note: cannot inject this Testable class, so have to put it into
-			     the Jar file.
-			-->
-	        <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
-
+            <fileset dir="classes/src" />
+            <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
 		</jar>
 		<delete dir="${temp.dir}" />
 	</target>
 
 
 	<!-- One Jar is troublesome because of Guice problems: http://bit.ly/anGc7a -->
-	<import file="${one-jar.dist.dir}/one-jar-ant-task.xml" />
-	<target name="create-one-jar">
+	<target name="build.one-jar-guice">
 		<mkdir dir="build"/>
 		<antcall target="copy-libs-to-temp" />
-		<one-jar destfile="build/test-one-jar-guice-${one-jar.version}.jar" manifest="onejar-guice.mf">
+		<one-jar destfile="build/${test}-one-jar-guice.jar" manifest="onejar-guice.mf">
 			<main>
-				<fileset dir="${classes.dir}/src"/>
-                <fileset dir="${classes.dir}/test" includes="**/Testable*"/>
+				<fileset dir="classes/src"/>
+                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
 			</main>
 			<lib>
 				<fileset dir="${temp.dir}" />
@@ -111,65 +91,46 @@
     <target name="test" depends="build">
         <antcall target="test.one-jar-guice" />
     	<antcall target="test.eclipse-guice" />
-        <antcall target="report"/>   
+        <antcall target="junit.report"/>   
     </target>
    
-	<!--
-    <target name="test.one-jar-guice" depends="build">
-        <echo>********** test-one-jar-guice-${one-jar.version}.jar</echo>
-        <junit fork="yes" showoutput="yes" printsummary="yes">
-            <jvmarg value="-Done-jar.verbose=true" />
-            <jvmarg value="-Done-jar.jarname=${basedir}/build/test-one-jar-guice-${one-jar.version}.jar" />
-            <classpath>
-            	<path refid="libraries" />
-            	<path location="${classes.dir}/test"/>
-                <fileset file="${basedir}/build/test-one-jar-guice-${one-jar.version}.jar" />
-            </classpath>
-            <test name="com.simontuffs.onejar.guice.test.SelfTestOneJarGuice" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarGuice" />
-            <formatter type="${formatter}" usefile="yes" />
-        </junit>
-    </target>
-	-->
-
-    <target name="test.one-jar-guice" depends="build">
-        <echo>********** test-one-jar-guice-${one-jar.version}.jar</echo>
+    <target name="test.one-jar-guice" depends="build" description="Test OneJar Guice">
+        <echo>********** test-one-jar-guice.jar</echo>
         <junit fork="yes" showoutput="no" printsummary="yes">
             <jvmarg value="-Done-jar.verbose=true" />
-            <jvmarg value="-Done-jar.jarname=${basedir}/build/test-one-jar-guice-${one-jar.version}.jar" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/${test}-one-jar-guice.jar" />
             <classpath>
-                <fileset file="${basedir}/build/test-one-jar-guice-${one-jar.version}.jar" />
+                <fileset file="${basedir}/build/${test}-one-jar-guice.jar" />
                 <path refid="one-jar.libraries"/>
-            	<path location="${classes.dir}/test" />
+            	<path location="classes/test" />
             </classpath>
 
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.guice.test.SelfTestOneJarGuice" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarGuice" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
     </target>
 
-    <target name="test.eclipse-guice" depends="build">
+    <target name="run.eclipse-guice" depends="build.eclipse-jar-guice" description="Run a Eclipse Jar Guice">
+        <java fork="true" jar="build/test-eclipse-guice.jar"/>
+    </target>
+
+    <target name="run.one-jar-guice" depends="build.one-jar-guice" description="Run a Eclipse Jar Guice">
+        <java fork="true" jar="build/test-one-jar-guice.jar"/>
+    </target>
+	
+    <target name="test.eclipse-guice" depends="build" description="Test Eclipse Jar Guice">
         <echo>********** test-eclipse-guice.jar</echo>
         <junit fork="yes" showoutput="yes" printsummary="yes" dir="${basedir}">
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
-            <classpath path="${classes.dir}/test"/>
+            <classpath path="classes/test"/>
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.guice.test.SelfTestEclipseGuice" todir="${test.results.dir}" outfile="eclipse-SelfTestEclipseGuice" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
-    </target>
-
-    <target name="report">
-        <echo>basedir.unix=${basedir.unix}</echo>
-        <echo>test.reports=${test.reports.dir}</echo>
-            
-        <mkdir dir="${test.reports.dir}" />
-        <junitreport todir="${test.reports.dir}">
-            <fileset dir="${test.results.dir}" includes="*SelfTest*.xml" />
-            <report format="noframes" todir="${test.reports.dir}" />
-        </junitreport>
-        <echo>***********************************************</echo>
-        <echo>* Report is in ${test.reports.dir}/junit_noframes.html</echo>
-        <echo>***********************************************</echo>
     </target>
 
 </project>

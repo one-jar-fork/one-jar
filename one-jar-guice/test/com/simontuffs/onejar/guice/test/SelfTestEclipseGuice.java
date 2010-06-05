@@ -2,8 +2,6 @@ package com.simontuffs.onejar.guice.test;
 
 import junit.framework.TestCase;
 
-import com.simontuffs.onejar.Boot;
-import com.simontuffs.onejar.JarClassLoader;
 import com.simontuffs.onejar.test.Invoker;
 import com.simontuffs.onejar.test.Invoker.Result;
 

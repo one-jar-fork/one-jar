@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.simontuffs.onejar.example.main.Testable;
 
-public class Main extends Testable{
+public class Main extends Testable {
 
     public Main(){
 	}

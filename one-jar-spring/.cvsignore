@@ -1,1 +1,5 @@
 $jarplug.work
+one-jar-spring-eclipse.jar
+build
+test-reports
+test-results
