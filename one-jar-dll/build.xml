@@ -157,7 +157,7 @@
     <property name="formatter" value="xml" />
     
     <!-- Test the distribution -->
-    <target name="test" depends="dist">
+    <target name="test" depends="dist" description="Test native library mechanism">
         <antcall target="test.one-jar-task-dll" />
         <antcall target="test.one-jar-task-arch-dll" />
         <antcall target="report"/>   
