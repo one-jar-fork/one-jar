@@ -19,7 +19,7 @@
         <mkdir dir="classes/test"/>
     </target>
 
-	<target name="build" depends="clean, mkdirs, compile, build.one-jar-jdbc" />
+	<target name="build" depends="clean, mkdirs, compile, build.one-jar-jdbc, build.one-jar-jdbc-class-path, build.one-jar-jdbc-no-dep"/>
 
 	<target name="clean">
 		<delete dir="classes" />
@@ -62,11 +62,48 @@
 		<delete dir="${temp.dir}" />
 	</target>
 
+    <target name="build.one-jar-jdbc-class-path">
+        <mkdir dir="build"/>
+        <one-jar destfile="build/${test}-one-jar-jdbc-class-path.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.simontuffs.onejar.Boot"/>
+                <attribute name="Class-Path" value="../lib/derby.jar ../lib/mysql-connector.jar"/>
+                <attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.test.jdbc.main.Main"/>
+            </manifest>
+            <main>
+                <fileset dir="classes/src"/>
+                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
+            </main>
+            <lib>
+            </lib>
+        </one-jar>
+        <delete dir="${temp.dir}" />
+    </target>
+
+    <target name="build.one-jar-jdbc-no-dep">
+        <mkdir dir="build"/>
+        <one-jar destfile="build/${test}-one-jar-jdbc-no-dep.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.simontuffs.onejar.Boot"/>
+                <attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.test.jdbc.main.Main"/>
+            </manifest>
+            <main>
+                <fileset dir="classes/src"/>
+                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
+            </main>
+            <lib>
+            </lib>
+        </one-jar>
+        <delete dir="${temp.dir}" />
+    </target>
+
     <property name="formatter" value="xml" />
 
     <!-- Test the distribution -->
     <target name="test" depends="build" description="Test the build">
         <antcall target="test.one-jar-jdbc" />
+        <antcall target="test.one-jar-jdbc-class-path" />
+        <antcall target="test.one-jar-jdbc-no-dep" />
         <antcall target="junit.report"/>   
     </target>
    
@@ -88,8 +125,57 @@
         </junit>
     </target>
 
-    <target name="run.one-jar-jdbc" depends="build.one-jar-jdbc" description="Run a Eclipse Jar Jdbc">
+    <!-- Load the mysql-connector as a jar, external to the One-Jar, via the manifest Class-Path -->
+    <target name="test.one-jar-jdbc-class-path" depends="build" description="Test OneJar Jdbc">
+        <echo>********** test-one-jar-jdbc-class-path.jar</echo>
+        <junit fork="yes" showoutput="no" printsummary="yes">
+            <jvmarg value="-Done-jar.verbose=true" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/${test}-one-jar-jdbc-class-path.jar" />
+            <sysproperty key="one-jar.class.path" value="lib/derby.jar|lib/mysql-connector.jar"/>
+            <classpath>
+                <fileset file="${basedir}/build/${test}-one-jar-jdbc-class-path.jar" />
+                <path refid="one-jar.libraries"/>
+                <path location="classes/test" />
+            </classpath>
+
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
+            <test name="com.simontuffs.onejar.jdbc.test.SelfTestOneJarJdbc" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarJdbcClassPath" />
+            <formatter type="${formatter}" usefile="yes" />
+        </junit>
+    </target>
+
+	<!-- Load the mysql-connector as a jar, external to the One-Jar, via the one-jar.class.path -->
+	<target name="test.one-jar-jdbc-no-dep" depends="build" description="Test OneJar Jdbc">
+        <echo>********** test-one-jar-jdbc-no-dep.jar</echo>
+        <junit fork="yes" showoutput="no" printsummary="yes">
+            <jvmarg value="-Done-jar.verbose=true" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/${test}-one-jar-jdbc-no-dep.jar" />
+            <sysproperty key="one-jar.class.path" value="lib/derby.jar|lib/mysql-connector.jar"/>
+            <classpath>
+                <fileset file="${basedir}/build/${test}-one-jar-jdbc-no-dep.jar" />
+                <path refid="one-jar.libraries"/>
+                <path location="classes/test" />
+            </classpath>
+
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
+            <test name="com.simontuffs.onejar.jdbc.test.SelfTestOneJarJdbc" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarJdbcNoDep" />
+            <formatter type="${formatter}" usefile="yes" />
+        </junit>
+    </target>
+
+	<target name="run.one-jar-jdbc" depends="build.one-jar-jdbc" description="Run a Jar Jdbc with connectors inside lib.">
         <java fork="true" jar="build/test-one-jar-jdbc.jar"/>
     </target>
 	
+    <target name="run.one-jar-jdbc-class-path" depends="build.one-jar-jdbc-class-path" description="Run a Jar Jdbc with external Class-Path">
+        <java fork="true" jar="build/test-one-jar-jdbc-class-path.jar"/>
+    </target>
+
+	<target name="run.one-jar-jdbc-no-dep" depends="build.one-jar-jdbc-no-dep" description="Run a Jar Jdbc, no dependencies">
+        <java fork="true" jar="build/test-one-jar-jdbc-no-dep.jar">
+        	<sysproperty key="one-jar.class.path" value="lib/derby.jar|lib/mysql-connector.jar"/>
+		</java>
+    </target>
 </project>

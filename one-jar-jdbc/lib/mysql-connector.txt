@@ -1,0 +1,8 @@
+Please download the latest version of the MySQL connector for Java here:
+
+    http://dev.mysql.com/downloads/connector/j/
+
+and rename it to mysql-connector.jar for build/test.
+    
+This connector is GPL, and not license compatible with One-JAR: it should not be embedded inside
+a One-JAR distribution without full consideration of this fact.

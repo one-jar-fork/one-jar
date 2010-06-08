@@ -32,8 +32,11 @@ public class SelfTestOneJarJdbc extends TestCase {
         Invoker.invoke(test, "testJdbc");
     }
     
-    public void testLoadDriver() throws Exception {
-        Invoker.invoke(test, "testLoadDriver");
+    public void testLoadDerbyDriver() throws Exception {
+        Invoker.invoke(test, "testLoadDerbyDriver");
     }
 
+    public void testLoadMySqlDriver() throws Exception {
+        Invoker.invoke(test, "testLoadMySqlDriver");
+    }
 }

@@ -14,11 +14,18 @@ public class Main extends Testable {
         System.out.println("testJdbc: OK");
     }
     
-    public void testLoadDriver() throws Exception {
+    public void testLoadDerbyDriver() throws Exception {
         ClassLoader cl = this.getClass().getClassLoader();
         System.out.println("classloader=" + cl);
-        Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-        System.out.println("testLoadDriver: Loaded class org.apache.derby.jdbc.EmbeddedDriver");
+        Class jdbc = Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+        System.out.println("testLoadDerbyDriver: Loaded " + jdbc);
+    }
+
+    public void testLoadMySqlDriver() throws Exception {
+        ClassLoader cl = this.getClass().getClassLoader();
+        System.out.println("classloader=" + cl);
+        Class jdbc = Class.forName("com.mysql.jdbc.Driver");     
+        System.out.println("testLoadMySqlDriver: Loaded " + jdbc);
     }
 
 }
