@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/one-jar-log4j"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="4"/>
+</listAttribute>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="-jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:/eclipse/projects/com.simontuffs/one-jar-log4j/build/test-one-jar-log4j.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="one-jar-log4j"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Dlog4j.configuration=file:config/log4j.external.properties -Done-jar.info=true"/>
+</launchConfiguration>
