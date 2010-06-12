@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="one-jar-inversion" basedir="." default="build">
+
+    <!-- Hook into One-Jar project -->
+    <property name="one-jar.dir" location="../one-jar"/>
+    <import file="${one-jar.dir}/build.onejar.xml"/>
+    
+	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
+	<property name="temp.dir" value="temp" />	
+    <path id="libraries">
+    </path>
+    
+    <target name="mkdirs">
+        <mkdir dir="${test.results.dir}" />
+        <mkdir dir="${test.reports.dir}"/>
+    	<mkdir dir="classes/src"/>
+        <mkdir dir="classes/test"/>
+    </target>
+
+	<target name="build" depends="clean, mkdirs, compile, build.one-jar-inversion" />
+
+	<target name="clean">
+		<delete dir="classes" />
+		<mkdir dir="classes" />
+	</target>
+
+	<target name="compile" depends="mkdirs">
+        <javac destdir="classes/src" includes="**/*.java" debug="true">
+            <src path="src" />
+        	<!-- Cyclic dependency -->
+        	<src path="external"/>
+            <classpath refid="libraries" />
+            <classpath refid="one-jar.libraries"/>
+            <classpath path="${one-jar.build.ant}/example"/>
+        </javac>
+        <javac destdir="classes/test" includes="**/*.java" debug="true">
+            <src path="test" />
+            <classpath refid="libraries" />
+            <classpath refid="one-jar.libraries"/>
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
+        	<classpath path="classes/src"/>
+        </javac>
+	</target>
+
+	<!-- One Jar is troublesome because of inversion problems: http://bit.ly/anGc7a -->
+	<target name="build.one-jar-inversion">
+		<mkdir dir="build"/>
+		<one-jar destfile="build/${test}-one-jar-inversion.jar">
+            <manifest>
+                <attribute name="Main-Class" value="com.simontuffs.onejar.Boot"/>
+            	<attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.inversion.test.Main"/>
+            </manifest>
+			<main>
+				<fileset dir="classes/src" excludes="**/external/*"/>
+                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
+			</main>
+			<lib>
+				<fileset dir="lib" includes="*.jar" />
+			</lib>
+		</one-jar>
+		<delete dir="${temp.dir}" />
+		<jar destfile="build/external.jar">
+			<fileset dir="classes/src" includes="**/external/*"/>
+		</jar>
+		
+	</target>
+
+    <property name="formatter" value="xml" />
+
+    <!-- Test the distribution -->
+    <target name="test" depends="build" description="Test the build">
+        <antcall target="test.one-jar-inversion" />
+        <antcall target="junit.report"/>   
+    </target>
+   
+    <target name="test.one-jar-inversion" depends="build" description="Test OneJar inversion">
+        <echo>********** test-one-jar-inversion.jar</echo>
+        <junit fork="yes" showoutput="no" printsummary="yes">
+            <jvmarg value="-Done-jar.verbose=true" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/${test}-one-jar-inversion.jar" />
+        	<jvmarg value="-Done-jar.class.path=${basedir}/build/external.jar"/>
+            <classpath>
+                <fileset file="${basedir}/build/${test}-one-jar-inversion.jar" />
+                <path refid="one-jar.libraries"/>
+            	<path location="classes/test" />
+            </classpath>
+
+            <!-- Uses Invoker to set up a JUnit test bridge -->
+            <classpath path="${one-jar.build.ant}/test"/>
+            <test name="com.simontuffs.onejar.inversion.test.SelfTestOneJarInversionSuite" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarInversion" />
+            <formatter type="${formatter}" usefile="yes" />
+        </junit>
+    </target>
+
+    <target name="run.one-jar-inversion" depends="build.one-jar-inversion" description="Run a Eclipse Jar inversion">
+        <java fork="true" jar="build/test-one-jar-inversion.jar">
+            <jvmarg value="-Done-jar.class.path=${basedir}/build/external.jar"/>
+    	</java>
+    </target>
+	
+</project>
