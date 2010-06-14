@@ -5,9 +5,9 @@
     <property name="output" value="bin"/>
 
     <target name="compile" depends="create">
-        <javac destdir="bin">
+        <javac destdir="${output}">
             <src path="${src}"/>
-            <classpath refid="java"/>
+            <classpath refid="libraries"/>
         </javac>
     </target>
 
@@ -24,16 +24,17 @@
 
     <target name="create" depends="clean">
         <mkdir dir="${output}"/>
+    	<mkdir dir="jar"/>
     </target>
 
-	<target name="run">
+	<target name="run" depends="jar" description="Run as java application with external support jars">
 		<java classname="ApplicationContextExample"
 			classpath="jar\ApplicationContextExample.jar"
-			classpathref="java"
+			classpathref="libraries"
 			fork="true" />
 	</target>
 	
-    <property name="one-jar.dist.dir" value="../../one-jar/dist"/>
+    <property name="one-jar.dist.dir" value="../../one-jar/dist-0.96"/>
     <import file="${one-jar.dist.dir}/one-jar-ant-task.xml" optional="true" />
 	<target name="build.one-jar-spring-xml" depends="compile" description="Build a one-jar of this example">
 		<one-jar destfile="one-jar-spring-xml.jar">
@@ -41,7 +42,7 @@
 			    <attribute name="One-Jar-Main-Class" value="ApplicationContextExample"/>
 			</manifest>
     		<main>
-    	        <fileset dir="bin" includes="**/*"/>
+    	        <fileset dir="${output}" includes="**/*"/>
     			<fileset dir="src" includes="*.xml"/>
     		</main>
     		<lib>
@@ -57,9 +58,7 @@
 		<java fork="true" jar="one-jar-spring-xml.jar"/>
 	</target>
 
-    <path id="java">
-		<fileset file="jar\spring.jar" />
-		<fileset file="jar\commons-logging-1.1.1.jar" />
-        <fileset dir="${src}" /> 
+    <path id="libraries">
+		<fileset dir="../lib" includes="*.jar"/>
     </path>
 </project>

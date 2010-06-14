@@ -57,7 +57,6 @@
             </classpath>
 
         	<!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
 
             <test name="com.simontuffs.onejar.spring.test.SelfTestOneJarSpringScan" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarSpringScan" />
             <formatter type="${formatter}" usefile="yes" />
