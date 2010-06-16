@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="one-jar-$project$.jar" basedir="." default="build">
+
+    <target name="build">
+        <!-- Make the project-template -->
+        <jar destfile="build/one-jar-$project$.jar">
+            <fileset dir="." includes="src/**,test/**,ide/**,lib/**,.classpath,.project,build.xml"/>
+        </jar>
+    </target>
+
+</project>

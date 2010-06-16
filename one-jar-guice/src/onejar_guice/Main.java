@@ -2,7 +2,7 @@ package onejar_guice;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.simontuffs.onejar.example.main.Testable;
+import com.simontuffs.onejar.test.Testable;
 
 public class Main extends Testable {
 

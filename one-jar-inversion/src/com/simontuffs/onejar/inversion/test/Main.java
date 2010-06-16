@@ -1,7 +1,7 @@
 package com.simontuffs.onejar.inversion.test;
 
-import com.simontuffs.onejar.example.main.Testable;
 import com.simontuffs.onejar.inversion.test.external.Inversion;
+import com.simontuffs.onejar.test.Testable;
 
 public class Main extends Testable {
     

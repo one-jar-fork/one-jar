@@ -38,7 +38,6 @@
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
         	<classpath path="classes/src"/>
         </javac>
 	</target>
@@ -119,7 +118,6 @@
             </classpath>
 
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.jdbc.test.SelfTestOneJarJdbc" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarJdbc" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
@@ -139,7 +137,6 @@
             </classpath>
 
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.jdbc.test.SelfTestOneJarJdbc" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarJdbcClassPath" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
@@ -159,7 +156,6 @@
             </classpath>
 
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.jdbc.test.SelfTestOneJarJdbc" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarJdbcNoDep" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>

@@ -1,7 +1,7 @@
 package com.simontuffs.onejar.test.jdbc.main;
 
 import com.simontuffs.onejar.JarClassLoader;
-import com.simontuffs.onejar.example.main.Testable;
+import com.simontuffs.onejar.test.Testable;
 
 public class Main extends Testable {
     

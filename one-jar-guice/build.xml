@@ -32,13 +32,12 @@
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
         	<!-- Uses Invoker to set up a JUnit test bridge -->
-        	<classpath path="${one-jar.build.ant}/test"/>
         </javac>
         <javac destdir="classes/src" includes="**/*.java" debug="true">
             <src path="src" />
             <classpath refid="libraries" />
             <classpath refid="one-jar.libraries"/>
-            <classpath path="${one-jar.build.ant}/example"/>
+            <classpath path="${one-jar.ant.jar}"/>
         </javac>
 	</target>
 
@@ -63,7 +62,7 @@
 			<zipfileset src="${eclipse.jar-in-jar.dir}/jar-in-jar-loader.zip" />
 			<fileset dir="${temp.dir}" />
             <fileset dir="classes/src" />
-            <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
+			<zipfileset src="${one-jar.ant.jar}" includes="**/Testable.class"/>
 		</jar>
 		<delete dir="${temp.dir}" />
 	</target>
@@ -74,9 +73,9 @@
 		<mkdir dir="build"/>
 		<antcall target="copy-libs-to-temp" />
 		<one-jar destfile="build/${test}-one-jar-guice.jar" manifest="onejar-guice.mf">
+            <zipfileset src="${one-jar.ant.jar}" includes="**/Testable.class"/>
 			<main>
 				<fileset dir="classes/src"/>
-                <fileset dir="${one-jar.build.ant}/example" includes="**/Testable.class"/>
 			</main>
 			<lib>
 				<fileset dir="${temp.dir}" />
@@ -106,7 +105,6 @@
             </classpath>
 
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.guice.test.SelfTestOneJarGuice" todir="${test.results.dir}" outfile="one-jar-SelfTestOneJarGuice" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>
@@ -127,7 +125,6 @@
             <classpath refid="one-jar.libraries"/>
             <classpath path="classes/test"/>
             <!-- Uses Invoker to set up a JUnit test bridge -->
-            <classpath path="${one-jar.build.ant}/test"/>
             <test name="com.simontuffs.onejar.guice.test.SelfTestEclipseGuice" todir="${test.results.dir}" outfile="eclipse-SelfTestEclipseGuice" />
             <formatter type="${formatter}" usefile="yes" />
         </junit>

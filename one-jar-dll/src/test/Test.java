@@ -5,7 +5,7 @@
 
 package test;
 
-import com.simontuffs.onejar.example.main.Testable;
+import com.simontuffs.onejar.test.Testable;
 
 /**
  * @author simon

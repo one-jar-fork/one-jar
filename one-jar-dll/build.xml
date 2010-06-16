@@ -21,6 +21,11 @@
 	<property name="test.reports.dir" value="${basedir.unix}/test-reports"/>
 	<property name="test.results.dir" value="${basedir.unix}/test-results"/>
 	
+    <!-- Import the OneJar Ant taskdefs from a peer one-jar project -->
+    <property name="one-jar.dist.dir" value="${basedir}/../one-jar/dist"/>   
+    <import file="${one-jar.dist.dir}/one-jar-ant-task.xml"/>
+    <import file="${one-jar.dist.dir}/one-jar-macro.xml"/>
+    
 	<target name="mkdirs">
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${jar.dir}/main" />
@@ -43,7 +48,6 @@
             <src path="${test.dir}" />
             <classpath>
                 <fileset file="${one-jar.dir}/dist/one-jar-boot-${one-jar.version}.jar"/>   
-                <path location="${one-jar.build.ant}/test"/>
                 <path location="${one-jar.dir}/lib/junit-3.8.1.jar"/>
             </classpath>
         </javac>
@@ -55,7 +59,7 @@
 			<src path="${src.dir}" />
             <classpath>
                 <fileset file="${one-jar-boot.jar}" />
-                <path location="${one-jar.build.ant}/example"/>  
+                <path location="${one-jar.ant.jar}"/>  
             </classpath>
 		</javac>
 		<jar destfile="${jar.dir}/main/main.jar" manifest="${src.dir}/main-manifest.mf">
@@ -102,11 +106,6 @@
 	</target>
 
 
-	<!-- Import the OneJar Ant taskdefs from a peer one-jar project -->
-    <property name="one-jar.dist.dir" value="${basedir}/../one-jar/dist"/>   
-	<import file="${one-jar.dist.dir}/one-jar-ant-task.xml"/>
-    <import file="${one-jar.dist.dir}/one-jar-macro.xml"/>
-	
 	<target name="one-jar-ant-macro" depends="main,binlib,one-jar-boot">
 		<!-- The one-jar Ant macro -->
 		<one-jar-macro manifest="src/boot-manifest.mf" mainmanifest="${src.dir}/main-manifest.mf" destfile="${build.dir}/one-jar-dll-macro-${one-jar.version}.jar" onejarboot="${one-jar-boot.jar}">

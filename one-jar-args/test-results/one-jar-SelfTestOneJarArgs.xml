@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite errors="0" failures="0" hostname="gilmore" name="com.simontuffs.onejar.args.test.SelfTestOneJarArgsSuite" tests="1" time="0.067" timestamp="2010-06-12T03:20:48">
+<testsuite errors="0" failures="0" hostname="gilmore" name="com.simontuffs.onejar.args.test.SelfTestOneJarArgsSuite" tests="1" time="0.064" timestamp="2010-06-12T08:43:27">
   <properties>
     <property name="java.vendor" value="Sun Microsystems Inc." />
     <property name="ant.file.one-jar-args" value="C:\eclipse\projects\com.simontuffs\one-jar-args\build.xml" />
@@ -23,6 +23,7 @@
     <property name="java.version" value="1.6.0_10" />
     <property name="classes" value="classes" />
     <property name="user.timezone" value="" />
+    <property name="one-jar.ant.jar" value="C:\eclipse\projects\com.simontuffs\one-jar/dist/one-jar-ant-task-0.97.jar" />
     <property name="sun.arch.data.model" value="32" />
     <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.6.0_10\jre\lib\endorsed" />
     <property name="one-jar.dist.dir" value="C:\eclipse\projects\com.simontuffs\one-jar/dist" />
@@ -58,7 +59,7 @@
     <property name="java.vendor.url" value="http://java.sun.com/" />
     <property name="java.vm.vendor" value="Sun Microsystems Inc." />
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment" />
-    <property name="java.class.path" value="C:\eclipse\projects\com.simontuffs\one-jar-args\build\test-one-jar-args.jar;C:\eclipse\projects\com.simontuffs\one-jar\lib\junit-3.8.1.jar;C:\eclipse\projects\com.simontuffs\one-jar\dist\one-jar-boot-0.97.jar;C:\eclipse\projects\com.simontuffs\one-jar-args\classes\test;C:\eclipse\projects\com.simontuffs\one-jar\build\ant\test;C:\eclipse\projects\com.simontuffs\one-jar-args;C:\PROGRA~1\JMF21~1.1E\lib\sound.jar;C:\PROGRA~1\JMF21~1.1E\lib\jmf.jar;C:\PROGRA~1\JMF21~1.1E\lib;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-launcher.jar;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant.jar;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-junit.jar" />
+    <property name="java.class.path" value="C:\eclipse\projects\com.simontuffs\one-jar-args\build\test-one-jar-args.jar;C:\eclipse\projects\com.simontuffs\one-jar\lib\junit-3.8.1.jar;C:\eclipse\projects\com.simontuffs\one-jar\dist\one-jar-boot-0.97.jar;C:\eclipse\projects\com.simontuffs\one-jar\dist\one-jar-ant-task-0.97.jar;C:\eclipse\projects\com.simontuffs\one-jar-args\classes\test;C:\eclipse\projects\com.simontuffs\one-jar-args;C:\PROGRA~1\JMF21~1.1E\lib\sound.jar;C:\PROGRA~1\JMF21~1.1E\lib\jmf.jar;C:\PROGRA~1\JMF21~1.1E\lib;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-launcher.jar;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant.jar;C:\eclipse\eclipse-3.5\eclipse\plugins\org.apache.ant_1.7.1.v20090120-1145\lib\ant-junit.jar" />
     <property name="ant.version" value="Apache Ant version 1.7.1 compiled on June 27 2008" />
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification" />
     <property name="java.vm.specification.version" value="1.0" />
@@ -83,7 +84,7 @@
     <property name="one-jar.verbose" value="true" />
     <property name="java.specification.version" value="1.6" />
   </properties>
-  <testcase classname="com.simontuffs.onejar.args.test.SelfTestOneJarArgsSuite$1" name="testArgs" time="0.0040" />
+  <testcase classname="com.simontuffs.onejar.args.test.SelfTestOneJarArgsSuite$1" name="testArgs" time="0.0030" />
   <system-out><![CDATA[Boot: Checking C:\eclipse\projects\com.simontuffs\one-jar-args\build\test-one-jar-args.jar as One-Jar file
 JarClassLoader: load(null,C:/eclipse/projects/com.simontuffs/one-jar-args/build/test-one-jar-args.jar)
 JarClassLoader: caching main/main.jar
@@ -99,11 +100,6 @@ JarClassLoader: cached bytes for entry name com/simontuffs/onejar/args/
 JarClassLoader: cached bytes for local name main/main.jar/com/simontuffs/onejar/args/test/
 JarClassLoader: cached bytes for entry name com/simontuffs/onejar/args/test/
 JarClassLoader: cached bytes for class com/simontuffs/onejar/args/test/Main.class
-JarClassLoader: cached bytes for local name main/main.jar/com/simontuffs/onejar/example/
-JarClassLoader: cached bytes for entry name com/simontuffs/onejar/example/
-JarClassLoader: cached bytes for local name main/main.jar/com/simontuffs/onejar/example/main/
-JarClassLoader: cached bytes for entry name com/simontuffs/onejar/example/main/
-JarClassLoader: cached bytes for class com/simontuffs/onejar/example/main/Testable.class
 JarClassLoader: cached bytes for local name main/main.jar/META-INF/MANIFEST.MF
 JarClassLoader: cached bytes for entry name META-INF/MANIFEST.MF
 JarClassLoader: caching .version
@@ -134,8 +130,6 @@ JarClassLoader: caching com/simontuffs/onejar/JarClassLoader$FileURLFactory$1.cl
 JarClassLoader: using jarFile.getInputStream(com/simontuffs/onejar/JarClassLoader$FileURLFactory$1.class)
 JarClassLoader: caching com/simontuffs/onejar/JarClassLoader$FileURLFactory.class
 JarClassLoader: using jarFile.getInputStream(com/simontuffs/onejar/JarClassLoader$FileURLFactory.class)
-JarClassLoader: caching com/simontuffs/onejar/JarClassLoader$IURLFactory$1.class
-JarClassLoader: using jarFile.getInputStream(com/simontuffs/onejar/JarClassLoader$IURLFactory$1.class)
 JarClassLoader: caching com/simontuffs/onejar/JarClassLoader$IURLFactory.class
 JarClassLoader: using jarFile.getInputStream(com/simontuffs/onejar/JarClassLoader$IURLFactory.class)
 JarClassLoader: caching com/simontuffs/onejar/JarClassLoader$OneJarURLFactory.class
@@ -154,12 +148,11 @@ JarClassLoader: caching doc/one-jar-license.txt
 JarClassLoader: using jarFile.getInputStream(doc/one-jar-license.txt)
 JarClassLoader: caching META-INF/MANIFEST.MF
 JarClassLoader: using jarFile.getInputStream(META-INF/MANIFEST.MF)
+JarClassLoader: caching com/simontuffs/onejar/test/Testable.class
+JarClassLoader: using jarFile.getInputStream(com/simontuffs/onejar/test/Testable.class)
 JarClassLoader: findClass(com.simontuffs.onejar.args.test.Main)
 JarClassLoader: found com.simontuffs.onejar.args.test.Main in codebase 'main/main.jar'
 JarClassLoader: defineClass(com.simontuffs.onejar.args.test.Main)
-JarClassLoader: findClass(com.simontuffs.onejar.example.main.Testable)
-JarClassLoader: found com.simontuffs.onejar.example.main.Testable in codebase 'main/main.jar'
-JarClassLoader: defineClass(com.simontuffs.onejar.example.main.Testable)
 public void com.simontuffs.onejar.args.test.Main.testArgs()
 JarClassLoader: findResource(META-INF/services/javax.xml.parsers.DocumentBuilderFactory)
 JarClassLoader: resource META-INF/services/javax.xml.parsers.DocumentBuilderFactory resolved to null (unknown codebase)

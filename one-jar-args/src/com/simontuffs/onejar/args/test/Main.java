@@ -2,7 +2,7 @@ package com.simontuffs.onejar.args.test;
 
 import java.util.Arrays;
 
-import com.simontuffs.onejar.example.main.Testable;
+import com.simontuffs.onejar.test.Testable;
 
 public class Main extends Testable {
     

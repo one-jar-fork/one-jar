@@ -2,7 +2,7 @@ package com.simontuffs.onejar.test.log4j;
 
 import org.apache.log4j.Logger;
 
-import com.simontuffs.onejar.example.main.Testable;
+import com.simontuffs.onejar.test.Testable;
 
 public class Main extends Testable {
     

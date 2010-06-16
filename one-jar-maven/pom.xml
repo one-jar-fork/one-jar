@@ -10,6 +10,10 @@
 	<name>one-jar-maven</name>
 	<url>http://maven.apache.org</url>
 
+	<dependencyManagement>
+		<dependencies>
+		</dependencies>
+	</dependencyManagement>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -75,6 +79,14 @@
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
 			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<type>jar</type>
+			<classifier>sources</classifier>
+			<scope>compile</scope>
 		</dependency>
 	</dependencies>
 	<pluginRepositories>
