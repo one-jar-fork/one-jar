@@ -20,7 +20,7 @@
 <listEntry value="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;&#13;&#10;&lt;runtimeClasspathEntry internalArchive=&quot;/one-jar-$project$/classes/test&quot; path=&quot;3&quot; type=&quot;2&quot;/&gt;&#13;&#10;"/>
 </listAttribute>
 <booleanAttribute key="org.eclipse.jdt.launching.DEFAULT_CLASSPATH" value="false"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="$package$.test.SelfTestOneJar$project$Suite"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="$package$.test.$project$Suite"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="one-jar-$project$"/>
 <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Done-jar.verbose=false&#13;&#10;-Done-jar.jar.path=${project_loc:one-jar-$project$}/build/test-one-jar-$project$.jar"/>
 </launchConfiguration>

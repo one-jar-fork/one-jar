@@ -4,7 +4,8 @@
     <target name="build">
         <!-- Make the project-template -->
         <jar destfile="build/one-jar-$project$.jar">
-            <fileset dir="." includes="src/**,test/**,ide/**,lib/**,.classpath,.project,build.xml"/>
+            <fileset dir="." includes="test/**,junit/**,ide/**,lib/**,.classpath,.project,build.xml"/>
+            <fileset dir="../one-jar" includes="build.onejar.xml"/>
         </jar>
     </target>
 

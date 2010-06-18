@@ -59,8 +59,8 @@ public class AppGen {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
-                        .replace("name=\"$project$\"", "name=\"" + project + "\"")
-                        .replace("<name>$project$</name>", "<name>"+project+"</name>")
+                        .replace("name=\"one-jar-$project$\"", "name=\"" + project + "\"")
+                        .replace("<name>one-jar-$project$</name>", "<name>"+project+"</name>")
                         .replace("$project$", under);
                     System.out.println(line);
                     fw.write(line + "\n");
