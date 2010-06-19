@@ -20,19 +20,27 @@ public class AppGen {
     }
     
     public static void main(String args[]) throws Exception {
-        if (args.length < 2) 
-            throw new Exception("Usage: appgen <project-name> <package-name>");
-        String project = args[0];
-        String pkg = args[1];
+        String project, pkg;
+        if (args.length == 2) {
+            project = args[0];
+            pkg = args[1];
+        } else {
+            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+            System.out.print("Enter project name: "); System.out.flush();
+            project = br.readLine();
+            System.out.print("Enter package name: "); System.out.flush();
+            pkg = br.readLine();
+        }
+        File dir = new File(project);
+        if (dir.exists()) 
+            throw new Exception("Directory " + dir + " already exists");
+        dir.mkdirs();
+        project = dir.getName();
         String pkgdir = pkg.replace(".", "/");
         if (pkg.contains("-") || pkg.contains("/"))
             throw new Exception("Illegal Java package name: " + pkg);
         String camel = toCamelCase(project);
         String under = project.replace("-", "_");
-        File dir = new File("../" + project);
-        if (dir.exists()) 
-            throw new Exception("Directory " + dir + " already exists");
-        dir.mkdirs();
         
         
         JarFile jar = new JarFile("one-jar-$project$.jar");

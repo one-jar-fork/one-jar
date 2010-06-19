@@ -1,0 +1,34 @@
+<project name="one-jar-appgen" default="build">
+
+    <!-- Hook into One-Jar project -->
+    <property name="one-jar.dir" location="../one-jar"/>
+    <import file="${one-jar.dir}/build.onejar.xml"/>
+
+	<target name="compile">
+	    <mkdir dir="classes/src/appgen"/>
+		<javac destdir="classes/src/appgen" debug="true">
+	        <src path="src/appgen"/>
+	    </javac>
+	</target>
+	
+	<target name="clean">
+		<delete dir="classes"/>
+	</target>
+	
+	<target name="build" depends="compile">
+		<mkdir dir="build"/>
+		<one-jar destfile="build/one-jar-appgen.jar">
+			<manifest>
+			    <attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.appgen.AppGen"/>
+			</manifest>
+		    <main>
+			     <fileset dir="classes/src/appgen"/>
+			</main>
+		</one-jar>
+	</target>
+	
+	<target name="run.one-jar-appgen" depends="build" description="Run AppGen as a one-jar">
+        <java fork="true" jar="build/one-jar-appgen.jar"/>
+	</target>
+
+</project>

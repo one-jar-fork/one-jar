@@ -2,8 +2,9 @@
 <project name="one-jar-$project$" basedir="." default="build">
 
     <!-- Hook into One-Jar project -->
-	<available property="one-jar.dir" file="../one-jar" value="../one-jar"/>
-    <property name="one-jar.dir" location="." />
+    <available property="one-jar.dir" file="../one-jar/build.onejar.xml" value="../one-jar"/>
+    <!-- Will be ignored if available above -->
+	<property name="one-jar.dir" location="." />
     <import file="${one-jar.dir}/build.onejar.xml"/>
     
 	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
