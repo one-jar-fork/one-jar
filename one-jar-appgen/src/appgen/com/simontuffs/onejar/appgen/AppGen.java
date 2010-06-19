@@ -1,9 +1,13 @@
 package com.simontuffs.onejar.appgen;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -51,12 +55,29 @@ public class AppGen {
             if (name.equals("META-INF"))
                 continue;
             if (entry.isDirectory()) {
-                name = name.replace("$package$",pkgdir).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel).replace("$project$", under);
+                name = name.replace("$package$",pkgdir)
+                    .replace("OneJar$project$", "OneJar" + camel)
+                    .replace("test$project$", "test" + camel)
+                    .replace("$project$", under);
                 File file = new File(dir, name);
                 System.out.println("mkdir " + file);
                 file.mkdir();
+            } else if (name.endsWith(".jar")) {
+                File file = new File(dir, name);
+                file.getParentFile().mkdirs();
+                OutputStream os = new FileOutputStream(file);
+                InputStream is = new BufferedInputStream(jar.getInputStream(entry));
+                byte buf[] = new byte[256];
+                int len;
+                while ((len=is.read(buf)) >= 0) {
+                    os.write(buf, 0, len);
+                }
+                os.close();
+                
             } else {
-                name = name.replace("$package$", pkgdir).replace("OneJar$project$", "OneJar" + camel).replace("$project$", under);
+                name = name.replace("$package$", pkgdir)
+                    .replace("OneJar$project$", "OneJar" + camel)
+                    .replace("$project$", under);
                 File file = new File(dir, name);
                 file.getParentFile().mkdirs();
                 name = entry.getName().replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel).replace("$project$", under);
@@ -67,6 +88,8 @@ public class AppGen {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
+                        .replace(".$project$\"", "." + project + "\"")
+                        .replace("test-$project$.jar", "test-" + project + ".jar")
                         .replace("name=\"one-jar-$project$\"", "name=\"" + project + "\"")
                         .replace("<name>one-jar-$project$</name>", "<name>"+project+"</name>")
                         .replace("$project$", under);

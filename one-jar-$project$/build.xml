@@ -4,7 +4,7 @@
     <!-- Hook into One-Jar project -->
     <available property="one-jar.dir" file="../one-jar/build.onejar.xml" value="../one-jar"/>
     <!-- Will be ignored if available above -->
-	<property name="one-jar.dir" location="." />
+	<property name="one-jar.dir" location="one-jar" />
     <import file="${one-jar.dir}/build.onejar.xml"/>
     
 	<property name="eclipse.jar-in-jar.dir" value="build-lib/eclipse"/>
@@ -48,7 +48,7 @@
         </javac>
 	</target>
 
-	<!-- One Jar is troublesome because of $project$ problems: http://bit.ly/anGc7a -->
+    <!-- Build the One-Jar -->
 	<target name="build.$project$">
 		<mkdir dir="build"/>
 		<one-jar destfile="build/test-$project$.jar">

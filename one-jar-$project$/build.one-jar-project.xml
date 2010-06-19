@@ -7,8 +7,8 @@
         <!-- Make the project-template -->
         <jar destfile="build/one-jar-$project$.jar">
             <fileset dir="." includes="test/**,junit/**,ide/**,lib/**,.classpath,.project,build.xml"/>
-            <fileset dir="../one-jar" includes="build.onejar.xml"/>
-            <fileset dir=".." includes="one-jar/dist/one-jar-ant-task-${one-jar.version}.jar,one-jar/dist/one-jar-ant-task.xml"/>
+            <fileset dir=".." includes="one-jar/build.onejar.xml"/>
+            <fileset dir=".." includes="one-jar/dist/one-jar-ant-task-${one-jar.version}.jar,one-jar/dist/one-jar-boot-${one-jar.version}.jar,one-jar/dist/one-jar-ant-task.xml"/>
             <fileset dir=".." includes="one-jar/lib/junit*.jar"/>
         </jar>
     </target>
