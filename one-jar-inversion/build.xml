@@ -21,10 +21,10 @@
 
 	<target name="clean">
 		<delete dir="classes" />
-		<mkdir dir="classes" />
 	</target>
 
 	<target name="compile" depends="mkdirs">
+        <mkdir dir="classes/src" />
         <javac destdir="classes/src" includes="**/*.java" debug="true">
             <src path="src" />
         	<!-- Cyclic dependency -->
@@ -33,6 +33,7 @@
             <classpath refid="one-jar.libraries"/>
             <classpath path="${one-jar.ant.jar}"/>
         </javac>
+		<mkdir dir="classes/test"/>
         <javac destdir="classes/test" includes="**/*.java" debug="true">
             <src path="test" />
             <classpath refid="libraries" />
@@ -43,9 +44,9 @@
 	</target>
 
 	<!-- One Jar is troublesome because of inversion problems: http://bit.ly/anGc7a -->
-	<target name="build.one-jar-inversion">
+	<target name="build.one-jar-inversion" depends="compile">
 		<mkdir dir="build"/>
-		<one-jar destfile="build/${test}-one-jar-inversion.jar">
+		<one-jar destfile="build/test-one-jar-inversion.jar">
             <manifest>
                 <attribute name="Main-Class" value="com.simontuffs.onejar.Boot"/>
             	<attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.inversion.test.Main"/>
@@ -77,10 +78,10 @@
         <echo>********** test-one-jar-inversion.jar</echo>
         <junit fork="yes" showoutput="no" printsummary="yes">
             <jvmarg value="-Done-jar.verbose=true" />
-            <jvmarg value="-Done-jar.jarname=${basedir}/build/${test}-one-jar-inversion.jar" />
+            <jvmarg value="-Done-jar.jarname=${basedir}/build/test-one-jar-inversion.jar" />
         	<jvmarg value="-Done-jar.class.path=${basedir}/build/external.jar"/>
             <classpath>
-                <fileset file="${basedir}/build/${test}-one-jar-inversion.jar" />
+                <fileset file="${basedir}/build/test-one-jar-inversion.jar" />
                 <path refid="one-jar.libraries"/>
             	<path location="classes/test" />
             </classpath>
