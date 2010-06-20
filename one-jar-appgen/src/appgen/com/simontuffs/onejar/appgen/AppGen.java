@@ -9,9 +9,7 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 
 public class AppGen {
@@ -50,7 +48,7 @@ public class AppGen {
 
         JarInputStream is;
         try {
-            is = new JarInputStream(AppGen.class.getResourceAsStream("/one-jar-$project$.jar"));
+            is = new JarInputStream(AppGen.class.getClassLoader().getResourceAsStream("one-jar-$project$.jar"));
         } catch (Exception x) {
             is = new JarInputStream(new FileInputStream("one-jar-$project$.jar"));
         }
@@ -82,6 +80,7 @@ public class AppGen {
                     .replace("$project$Suite", camel + "Suite")
                     .replace("$project$-suite", project + "-suite")
                     .replace("test-$project$", "test-" + project)
+                    .replace("$project$Main", camel + "Main")
                     .replace("$project$", under);
                 File file = new File(dir, name);
                 file.getParentFile().mkdirs();
@@ -98,6 +97,7 @@ public class AppGen {
                         .replace("test-$project$.jar", "test-" + project + ".jar")
                         .replace("name=\"one-jar-$project$\"", "name=\"" + project + "\"")
                         .replace("<name>one-jar-$project$</name>", "<name>"+project+"</name>")
+                        .replace("$project$Main", camel + "Main")
                         .replace("$project$", under);
                     System.out.println(line);
                     fw.write(line + "\n");

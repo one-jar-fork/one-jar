@@ -4,6 +4,10 @@
     <property name="one-jar.dir" location="../one-jar"/>
     <import file="${one-jar.dir}/build.onejar.xml"/>
 
+	<target name="init">
+		<ant antfile="build.one-jar-project.xml" dir="../one-jar-$project$"/>
+	</target>
+	
 	<target name="compile">
 	    <mkdir dir="classes/src/appgen"/>
 		<javac destdir="classes/src/appgen" debug="true">
@@ -16,7 +20,7 @@
 		<delete file="one-jar-$project$.jar"/>
 	</target>
 	
-	<target name="build" depends="compile">
+	<target name="build" depends="init, compile">
 		<mkdir dir="build"/>
 		<one-jar destfile="build/one-jar-appgen.jar">
 			<manifest>
@@ -25,7 +29,7 @@
 		    <main>
 			     <fileset dir="classes/src/appgen"/>
 			</main>
-			<fileset dir="." includes="one-jar-$project$.jar"/>
+			<fileset dir="." includes="one-jar-$project$.jar" />
 		</one-jar>
 	</target>
 	
