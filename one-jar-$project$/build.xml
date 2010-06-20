@@ -70,13 +70,13 @@
     <property name="formatter" value="xml" />
 
     <!-- Test the distribution -->
-    <target name="test" depends="build" description="Test the build">
+    <target name="junit" depends="build" description="Test the build">
         <antcall target="test.$project$" />
         <antcall target="junit.report"/>   
     </target>
    
-    <target name="test.$project$" depends="build" description="Test OneJar $project$">
-        <echo>********** test-$project$.jar</echo>
+    <target name="junit.$project$" depends="build" description="Test OneJar $project$">
+        <echo>********** junit-$project$.jar</echo>
         <junit fork="yes" showoutput="no" printsummary="yes">
             <jvmarg value="-Done-jar.verbose=true" />
             <jvmarg value="-Done-jar.jarname=${basedir}/build/test-$project$.jar" />
@@ -92,7 +92,7 @@
         </junit>
     </target>
 
-    <target name="run.$project$" depends="build" description="Run a One-Jar $project$">
+    <target name="test.$project$" depends="build" description="Run a One-Jar $project$">
         <java fork="true" jar="build/test-$project$.jar"/>
     </target>
 	

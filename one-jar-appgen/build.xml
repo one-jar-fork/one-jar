@@ -28,9 +28,9 @@
 	</target>
 	
 	<target name="run.one-jar-appgen" depends="build" description="Run AppGen as a one-jar">
-		<input message="Enter project name:" addproperty="project.name"/>
-		<input message="Enter project package:" addproperty="project.pkg"/>
-        <java fork="true" jar="build/one-jar-appgen.jar" args="${project.name} ${project.pkg}"/>
+		<input message="Enter project path (project name is last segment):" addproperty="project.path"/>
+		<input message="Enter project java package:" addproperty="project.pkg"/>
+        <java fork="true" jar="build/one-jar-appgen.jar" args="${project.path} ${project.pkg}"/>
 	</target>
 
 </project>

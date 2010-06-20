@@ -30,9 +30,9 @@ public class AppGen {
             pkg = args[1];
         } else {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            System.out.print("Enter project name: "); System.out.flush();
+            System.out.print("Enter project path (project name is last segment): "); System.out.flush();
             project = br.readLine();
-            System.out.print("Enter package name: "); System.out.flush();
+            System.out.print("Enter java package name: "); System.out.flush();
             pkg = br.readLine();
         }
         File dir = new File(project);
@@ -56,8 +56,6 @@ public class AppGen {
                 continue;
             if (entry.isDirectory()) {
                 name = name.replace("$package$",pkgdir)
-                    .replace("OneJar$project$", "OneJar" + camel)
-                    .replace("test$project$", "test" + camel)
                     .replace("$project$", under);
                 File file = new File(dir, name);
                 System.out.println("mkdir " + file);
@@ -76,7 +74,9 @@ public class AppGen {
                 
             } else {
                 name = name.replace("$package$", pkgdir)
-                    .replace("OneJar$project$", "OneJar" + camel)
+                    .replace("$project$Suite", camel + "Suite")
+                    .replace("$project$-suite", project + "-suite")
+                    .replace("test-$project$", "test-" + project)
                     .replace("$project$", under);
                 File file = new File(dir, name);
                 file.getParentFile().mkdirs();
@@ -88,6 +88,7 @@ public class AppGen {
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
+                        .replace("$project$Suite", camel + "Suite")
                         .replace(".$project$\"", "." + project + "\"")
                         .replace("test-$project$.jar", "test-" + project + ".jar")
                         .replace("name=\"one-jar-$project$\"", "name=\"" + project + "\"")

@@ -5,7 +5,8 @@
 	<import file="${one-jar.dir}/dist/one-jar-ant-task.xml"/>
     <target name="build">
         <!-- Make the project-template -->
-        <jar destfile="build/one-jar-$project$.jar">
+        <!-- Push to one-jar-appgen -->
+        <jar destfile="../one-jar-appgen/one-jar-$project$.jar">
             <fileset dir="." includes="test/**,junit/**,ide/**,lib/**,.classpath,.project,build.xml"/>
             <fileset dir=".." includes="one-jar/build.onejar.xml"/>
             <fileset dir=".." includes="one-jar/dist/one-jar-ant-task-${one-jar.version}.jar,one-jar/dist/one-jar-boot-${one-jar.version}.jar,one-jar/dist/one-jar-ant-task.xml"/>

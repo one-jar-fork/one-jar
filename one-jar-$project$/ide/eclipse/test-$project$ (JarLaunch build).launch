@@ -7,6 +7,6 @@
 <listEntry value="4"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="-jar"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:/eclipse/projects/com.simontuffs/one-jar-$project$/build/test-one-jar-$project$-ext.jar"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="C:/eclipse/projects/com.simontuffs/one-jar-$project$/build/test-$project$.jar"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="one-jar-$project$"/>
 </launchConfiguration>
