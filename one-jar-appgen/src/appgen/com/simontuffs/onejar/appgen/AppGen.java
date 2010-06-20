@@ -3,6 +3,7 @@ package com.simontuffs.onejar.appgen;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
@@ -11,6 +12,7 @@ import java.io.OutputStream;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.jar.JarInputStream;
 
 public class AppGen {
     
@@ -45,12 +47,15 @@ public class AppGen {
             throw new Exception("Illegal Java package name: " + pkg);
         String camel = toCamelCase(project);
         String under = project.replace("-", "_");
-        
-        
-        JarFile jar = new JarFile("one-jar-$project$.jar");
-        Enumeration<JarEntry> entries = jar.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
+
+        JarInputStream is;
+        try {
+            is = new JarInputStream(AppGen.class.getResourceAsStream("/one-jar-$project$.jar"));
+        } catch (Exception x) {
+            is = new JarInputStream(new FileInputStream("one-jar-$project$.jar"));
+        }
+        JarEntry entry = is.getNextJarEntry();
+        while (entry != null) {
             String name = entry.getName();
             if (name.equals("META-INF"))
                 continue;
@@ -64,10 +69,10 @@ public class AppGen {
                 File file = new File(dir, name);
                 file.getParentFile().mkdirs();
                 OutputStream os = new FileOutputStream(file);
-                InputStream is = new BufferedInputStream(jar.getInputStream(entry));
+                InputStream bis = new BufferedInputStream(is);
                 byte buf[] = new byte[256];
                 int len;
-                while ((len=is.read(buf)) >= 0) {
+                while ((len=bis.read(buf)) >= 0) {
                     os.write(buf, 0, len);
                 }
                 os.close();
@@ -84,7 +89,7 @@ public class AppGen {
                 FileWriter fw = new FileWriter(file);
                 System.out.println("--------------------------------------------------------------------------------------");
                 System.out.println("entry: " + name.replace("$project$", under));
-                BufferedReader br = new BufferedReader(new InputStreamReader(jar.getInputStream(entry)));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line;
                 while ((line = br.readLine()) != null) {
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
@@ -99,6 +104,7 @@ public class AppGen {
                 }
                 fw.close();
             }
+            entry = is.getNextJarEntry();
         }
     }
 

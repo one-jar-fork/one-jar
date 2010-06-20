@@ -24,6 +24,7 @@
 		    <main>
 			     <fileset dir="classes/src/appgen"/>
 			</main>
+			<fileset dir="." includes="one-jar-$project$.jar"/>
 		</one-jar>
 	</target>
 	
