@@ -92,7 +92,7 @@
         </junit>
     </target>
 
-    <target name="run.$project$" depends="build.$project$" description="Run a One-Jar $project$">
+    <target name="run.$project$" depends="build" description="Run a One-Jar $project$">
         <java fork="true" jar="build/test-$project$.jar"/>
     </target>
 	
