@@ -16,6 +16,7 @@
     <target name="mkdirs">
         <mkdir dir="${test.results.dir}" />
         <mkdir dir="${test.reports.dir}"/>
+        <mkdir dir="classes/src"/>
     	<mkdir dir="classes/test"/>
         <mkdir dir="classes/junit"/>
     </target>
@@ -33,6 +34,12 @@
 	</target>
 
 	<target name="compile" depends="mkdirs">
+        <javac destdir="classes/src" includes="**/*.java" debug="true">
+            <src path="src" />
+            <classpath refid="libraries" />
+            <classpath refid="one-jar.libraries"/>
+            <classpath path="${one-jar.ant.jar}"/>
+        </javac>
         <javac destdir="classes/test" includes="**/*.java" debug="true">
             <src path="test" />
             <classpath refid="libraries" />
@@ -51,6 +58,18 @@
     <!-- Build the One-Jar -->
 	<target name="build.$project$">
 		<mkdir dir="build"/>
+		<one-jar destfile="build/$project$.jar">
+            <manifest>
+                <attribute name="Main-Class" value="$package$.Boot"/>
+                <attribute name="One-Jar-Main-Class" value="$package$.main.$project$Main"/>
+            </manifest>
+            <main>
+                <fileset dir="classes/src"/>
+            </main>
+            <lib>
+                <fileset dir="lib" includes="*.jar" />
+            </lib>
+		</one-jar>
 		<one-jar destfile="build/test-$project$.jar">
             <manifest>
                 <attribute name="Main-Class" value="$package$.Boot"/>
@@ -70,12 +89,12 @@
     <property name="formatter" value="xml" />
 
     <!-- Test the distribution -->
-    <target name="junit" depends="build" description="Test the build">
-        <antcall target="test.$project$" />
+    <target name="junit.report.$project$" depends="build" description="JUnit test of $project$">
+        <antcall target="junit.$project$" />
         <antcall target="junit.report"/>   
     </target>
    
-    <target name="junit.$project$" depends="build" description="Test OneJar $project$">
+    <target name="junit.$project$" depends="build">
         <echo>********** junit-$project$.jar</echo>
         <junit fork="yes" showoutput="no" printsummary="yes">
             <jvmarg value="-Done-jar.verbose=true" />
@@ -92,7 +111,11 @@
         </junit>
     </target>
 
-    <target name="test.$project$" depends="build" description="Run a One-Jar $project$">
+    <target name="run.$project$" depends="build" description="Run a One-Jar $project$">
+        <java fork="true" jar="build/$project$.jar"/>
+    </target>
+
+	<target name="test.$project$" depends="build" description="Stand-alone test a One-Jar $project$">
         <java fork="true" jar="build/test-$project$.jar"/>
     </target>
 	
