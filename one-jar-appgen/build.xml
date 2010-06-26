@@ -22,7 +22,7 @@
 	
 	<target name="build" depends="init, compile">
 		<mkdir dir="build"/>
-		<one-jar destfile="build/one-jar-appgen.jar">
+		<one-jar destfile="build/one-jar-appgen-${one-jar.version}.jar">
 			<manifest>
 			    <attribute name="One-Jar-Main-Class" value="com.simontuffs.onejar.appgen.AppGen"/>
 			</manifest>

@@ -73,6 +73,9 @@
 		<mkdir dir="build"/>
 		<antcall target="copy-libs-to-temp" />
 		<one-jar destfile="build/${test}-one-jar-guice.jar" manifest="onejar-guice.mf">
+			<manifest>
+				<attribute name="One-Jar-URL-Factory" value="com.simontuffs.onejar.JarClassLoader$OneJarURLFactory"/>
+			</manifest>
             <zipfileset src="${one-jar.ant.jar}" includes="**/Testable.class"/>
 			<main>
 				<fileset dir="classes/src"/>
