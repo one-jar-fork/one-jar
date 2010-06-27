@@ -17,9 +17,22 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
+/**
+ * A One-JAR template-driven application generator.  A template project tree is 
+ * processed (default is one-jar-$project$.jar stored as a classloader resource) 
+ * substituting $project$ and $package$ in filenames and file content to generate a fully
+ * formed project tree, suitable for use with Ant and with Eclipse.
+ * 
+ * You can customize the project-tree template by unpacking the one-jar-$project$.jar
+ * into an external directory, customizing it, re-packing it into a .jar, 
+ * and passing its path as the third argument to this program.
+ * 
+ * @author simon
+ */
 public class AppGen {
     
     public static String toCamelCase(String string) {
@@ -33,7 +46,8 @@ public class AppGen {
     
     public static void main(String args[]) throws Exception {
         String project, pkg;
-        if (args.length == 2) {
+        String template = "one-jar-$project$.jar";
+        if (args.length >= 2) {
             project = args[0];
             pkg = args[1];
         } else {
@@ -43,6 +57,10 @@ public class AppGen {
             System.out.print("Enter java package name: "); System.out.flush();
             pkg = br.readLine();
         }
+        if (args.length == 3) {
+            template = args[2];
+        }
+        System.out.println("Template: " + template);
         File dir = new File(project);
         if (dir.exists()) 
             throw new Exception("Directory " + dir + " already exists");
@@ -56,9 +74,13 @@ public class AppGen {
 
         JarInputStream is;
         try {
-            is = new JarInputStream(AppGen.class.getClassLoader().getResourceAsStream("one-jar-$project$.jar"));
+            // Look in the file-system for an override.
+            is = new JarInputStream(new FileInputStream(template));
+            System.out.println("Loaded template from file: " + template);
         } catch (Exception x) {
-            is = new JarInputStream(new FileInputStream("one-jar-$project$.jar"));
+            URL url = AppGen.class.getClassLoader().getResource(template);
+            is = new JarInputStream(url.openStream());
+            System.out.println("Loaded template from classloader: " + url);
         }
         JarEntry entry = is.getNextJarEntry();
         while (entry != null) {
@@ -66,7 +88,9 @@ public class AppGen {
             if (name.equals("META-INF"))
                 continue;
             if (entry.isDirectory()) {
-                name = name.replace("$package$",pkgdir)
+                name = name
+                    .replace("$package$",pkgdir)
+                    .replace("-$project$", "-" + project)
                     .replace("$project$", under);
                 File file = new File(dir, name);
                 System.out.println("mkdir " + file);
@@ -88,23 +112,28 @@ public class AppGen {
                     .replace("$project$Suite", camel + "Suite")
                     .replace("$project$-suite", project + "-suite")
                     .replace("test-$project$", "test-" + project)
+                    .replace("$project$.java", camel + ".java")
                     .replace("$project$Main", camel + "Main")
+                    .replace("-$project$", "-" + project)
                     .replace("$project$", under);
                 File file = new File(dir, name);
                 file.getParentFile().mkdirs();
-                name = entry.getName().replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel).replace("$project$", under);
                 FileWriter fw = new FileWriter(file);
                 System.out.println("--------------------------------------------------------------------------------------");
-                System.out.println("entry: " + name.replace("$project$", under));
+                System.out.println("entry: " + name);
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String line;
                 while ((line = br.readLine()) != null) {
+                    if (line.contains("class")) {
+                        line = line.replace("$project$", camel);
+                    }
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
                         .replace("$project$Suite", camel + "Suite")
                         .replace(".$project$\"", "." + project + "\"")
-                        .replace("test-$project$.jar", "test-" + project + ".jar")
+                        .replace("$project$.jar",  project + ".jar")
                         .replace("name=\"one-jar-$project$\"", "name=\"" + project + "\"")
                         .replace("<name>one-jar-$project$</name>", "<name>"+project+"</name>")
+                        .replace("$project$.java", camel + ".java")
                         .replace("$project$Main", camel + "Main")
                         .replace("$project$", under);
                     System.out.println(line);
