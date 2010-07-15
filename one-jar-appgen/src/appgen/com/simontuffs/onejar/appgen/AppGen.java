@@ -127,6 +127,13 @@ public class AppGen {
                     if (line.contains("class")) {
                         line = line.replace("$project$", camel);
                     }
+                    // Hack up .classpath
+                    if (line.contains("path=\"/one-jar\"/")) {
+                        fw.write("\n    <classpathentry kind=\"lib\" path=\"one-jar/dist/one-jar-boot-0.97.jar\"/>");
+                        fw.write("\n    <classpathentry kind=\"lib\" path=\"one-jar/dist/one-jar-ant-task-0.97.jar\"/>");
+                        fw.write("\n    <classpathentry kind=\"lib\" path=\"one-jar/lib/junit-3.8.1.jar\"/>");
+                        continue;
+                    }
                     line = line.replace("$package$",pkg).replace("OneJar$project$", "OneJar" + camel).replace("test$project$", "test" + camel)
                         .replace("$project$Suite", camel + "Suite")
                         .replace(".$project$\"", "." + project + "\"")

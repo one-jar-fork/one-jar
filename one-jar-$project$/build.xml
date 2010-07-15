@@ -19,6 +19,7 @@
         <mkdir dir="classes/src"/>
     	<mkdir dir="classes/test"/>
         <mkdir dir="classes/junit"/>
+    	<mkdir dir="build"/>
     </target>
 
 	<target name="build" depends="clean, mkdirs, compile, build.$project$" />
