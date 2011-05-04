@@ -79,6 +79,7 @@ public class Boot {
 	public final static String P_JARNAMES = PROPERTY_PREFIX + "jar.names";
 	public final static String P_VERBOSE = PROPERTY_PREFIX + "verbose";
 	public final static String P_INFO = PROPERTY_PREFIX + "info";
+	public final static String P_WARNING = PROPERTY_PREFIX + "warning";
     public final static String P_STATISTICS = PROPERTY_PREFIX + "statistics";
     public final static String P_SHOW_PROPERTIES = PROPERTY_PREFIX + "show.properties";
     public final static String P_JARPATH = PROPERTY_PREFIX + "jar.path";
@@ -99,6 +100,7 @@ public class Boot {
                       "false: Recorded classes are flattened into a single directory.  \nDuplicates are ignored (first wins)",
         P_VERBOSE,    "true:  Print verbose classloading information", 
         P_INFO,       "true:  Print informative classloading information", 
+        P_WARNING,    "true:  Print serious classloading warnings", 
         P_STATISTICS, "true:  Shows statistics about the One-Jar Classloader",
         P_JARPATH,    "Full path of the one-jar file being executed.  \nOnly needed if java.class.path does not contain the path to the jar, e.g. on Max OS/X.",
         P_ONE_JAR_CLASS_PATH,    "Extra classpaths to be added to the execution environment.  \nUse platform independent path separator '" + P_PATH_SEPARATOR + "'",
@@ -113,7 +115,7 @@ public class Boot {
     
     protected static String mainJar;
     
-	protected static boolean info, verbose, statistics;
+	protected static boolean warning = true, info, verbose, statistics;
     protected static String myJarPath;
     
     protected static long startTime = System.currentTimeMillis();
@@ -350,28 +352,26 @@ public class Boot {
     
     public static void setProperties(IProperties jarloader) {
         INFO("setProperties(" + jarloader + ")");
-        if (getProperty(P_RECORD)) {
+        if (getProperty(P_RECORD, "false")) {
             jarloader.setRecord(true);
             jarloader.setRecording(System.getProperty(P_RECORD));
         } 
-        if (getProperty(P_JARNAMES)) {
+        if (getProperty(P_JARNAMES, "false")) {
             jarloader.setRecord(true);
             jarloader.setFlatten(false);
         }
-        if (getProperty(P_VERBOSE)) {
+        // TODO: clean up the use of one-jar.{verbose,info,warning} properties.
+        if (verbose = getProperty(P_VERBOSE, "false")) {
             jarloader.setVerbose(true);
             jarloader.setInfo(true);
-            verbose = true;
         } 
-        if (getProperty(P_INFO)) {
-            jarloader.setInfo(true);
-            info = true;
-        } 
+        jarloader.setInfo(info=getProperty(P_INFO, "false"));
+        jarloader.setWarning(warning=getProperty(P_WARNING, "true"));
         
-        statistics = getProperty(P_STATISTICS);
+        statistics = getProperty(P_STATISTICS, "false");
     }
     
-    public static boolean getProperty(String key) {
+    public static boolean getProperty(String key, String $default) {
         return Boolean.valueOf(System.getProperty(key, "false")).booleanValue();
     }
     

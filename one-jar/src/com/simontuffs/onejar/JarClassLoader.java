@@ -117,7 +117,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     }
     
     protected void WARNING(String message) {
-        System.err.println(PREFIX() + "Warning: " + NAME() + message); 
+        if (warning) System.err.println(PREFIX() + "Warning: " + NAME() + message); 
     }
     
     protected void INFO(String message) {
@@ -140,7 +140,7 @@ public class JarClassLoader extends ClassLoader implements IProperties {
     protected Set jarNames = Collections.synchronizedSet(new HashSet());
     
     protected boolean record = false, flatten = false, unpackFindResource = false;
-    protected boolean verbose = false, info = false;
+    protected boolean verbose = false, info = false, warning = true;
     protected String recording = RECORDING;
     
     protected String jarName, mainJar, wrapDir;
@@ -1050,6 +1050,12 @@ public class JarClassLoader extends ClassLoader implements IProperties {
         return info;
     }
     
+    public void setWarning(boolean $warning) {
+        warning = $warning;
+    }
+    public boolean getWarning() {
+        return warning;
+    }
     protected URLStreamHandler oneJarHandler = new Handler();
     
     // Injectable URL factory.
